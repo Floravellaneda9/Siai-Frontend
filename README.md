@@ -207,7 +207,7 @@ Esto permite que:
 
 También se utiliza este sistema en la sección de presentación y en el footer.
 
-> En este proyecto se utiliza el sistema Grid proporcionado por Bootstrap y no `display: grid` directamente en CSS.
+> En este proyecto se utiliza el sistema Grid proporcionado por Bootstrap.
 
 ---
 
@@ -412,18 +412,6 @@ https://siai-frontend-lime.vercel.app/
 
 **Repositorio:**
 https://github.com/Floravellaneda9/Siai-Frontend
-
----
-
-##  Estado actual
-
-**En desarrollo.**
-
-Este repositorio corresponde a la etapa de migración del proyecto SIAI Tucumán hacia **React + Vite**.
-
-La estructura inicial del frontend ya se encuentra implementada mediante componentes y Bootstrap.
-
-Las funcionalidades de navegación hacia los diferentes módulos forman parte de la estructura prevista del sistema y serán desarrolladas progresivamente.
 
 ---
 
