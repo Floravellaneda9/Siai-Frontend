@@ -1,4 +1,5 @@
 
+
 function Card({ titulo, cantidad, texto, color }) {
   return (
     <div className="col-md-6 col-xl-3">
@@ -24,6 +25,7 @@ function Card({ titulo, cantidad, texto, color }) {
     </div>
   );
 }
+
 
 function Cards({ estados = [] }) {
   return (

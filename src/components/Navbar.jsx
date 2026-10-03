@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+
+
 
 function Navbar() {
   return (
@@ -5,21 +8,19 @@ function Navbar() {
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div className="container-fluid">
 
-          <a className="navbar-brand fw-bold d-flex align-items-center" href="/">
+          <Link className="navbar-brand fw-bold d-flex align-items-center" to="/">
             <img
-              src="/image/logogota..png"
+              src="/img/logogota..png"
               alt="Logo SIAI Tucumán"
-              style={{
-                width: "35px",
-                height: "35px",
-                marginRight: "8px"
-              }}
+              width="35"
+              height="35"
+              className="me-2"
             />
 
             SIAI Tucumán
-          </a>
+          </Link>
 
-        
+
           <button
             className="navbar-toggler"
             type="button"
@@ -32,81 +33,81 @@ function Navbar() {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-      
+
           <div className="collapse navbar-collapse" id="navbarSIAI">
 
             <ul className="navbar-nav ms-auto">
 
-          
+
               <li className="nav-item">
-                <a className="nav-link" href="/mapa">
+                <Link className="nav-link" to="/mapa">
                   <i className="bi bi-map"></i>{" "}
                   Mapa
-                </a>
+                </Link>
               </li>
 
-           
+
               <li className="nav-item">
-                <a className="nav-link" href="/alertas">
+                <Link className="nav-link" to="/alertas">
                   <i className="bi bi-exclamation-triangle"></i>{" "}
                   Alertas{" "}
                   <span className="badge bg-danger">4</span>
-                </a>
+                </Link>
               </li>
 
-           
+
               <li className="nav-item">
-                <a className="nav-link" href="/estaciones">
+                <Link className="nav-link" to="/estaciones">
                   <i className="bi bi-broadcast"></i>{" "}
                   Estaciones
-                </a>
+                </Link>
               </li>
 
-             
+
               <li className="nav-item">
-                <a className="nav-link" href="/mediciones">
+                <Link className="nav-link" to="/mediciones">
                   <i className="bi bi-graph-up"></i>{" "}
                   Mediciones
-                </a>
+                </Link>
               </li>
 
-            
+
               <li className="nav-item">
-                <a className="nav-link" href="/historial">
+                <Link className="nav-link" to="/historial">
                   <i className="bi bi-clock-history"></i>{" "}
                   Historial
-                </a>
+                </Link>
               </li>
 
-           
+
               <li className="nav-item">
-                <a className="nav-link" href="/usuarios">
+                <Link className="nav-link" to="/usuarios">
                   <i className="bi bi-people"></i>{" "}
                   Usuarios
-                </a>
+                </Link>
               </li>
 
-              
+
               <li className="nav-item">
-                <a className="nav-link" href="/reportes">
+                <Link className="nav-link" to="/reportes">
                   <i className="bi bi-file-earmark-bar-graph"></i>{" "}
                   Reportes
-                </a>
+                </Link>
               </li>
 
-         
+
               <li className="nav-item">
-                <a className="nav-link" href="/configuracion">
+                <Link className="nav-link" to="/configuracion">
                   <i className="bi bi-gear"></i>{" "}
                   Configuración
-                </a>
+                </Link>
               </li>
 
-       
+
               <li className="nav-item ms-lg-2">
-                <a className="btn btn-primary" href="/login">
+                <Link className="btn btn-primary" to="/login">
                   LOGIN
-                </a>
+                </Link>
               </li>
 
             </ul>
