@@ -11,13 +11,11 @@ function Footer() {
             <div className="d-flex align-items-center justify-content-center justify-content-md-start">
 
               <img
-                src="/image/logogota..png"
+                src="/img/logogota..png"
                 alt="Logo SIAI Tucumán"
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  marginRight: "8px"
-                }}
+                width="40"
+                height="40"
+                className="me-2"
               />
 
               <span className="fw-bold text-primary">
