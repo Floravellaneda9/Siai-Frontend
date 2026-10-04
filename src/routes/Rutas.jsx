@@ -1,6 +1,9 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import Home from '../pages/Home.jsx'
 import Mapa from '../pages/Mapa.jsx'
+import Login from '../pages/Login.jsx'
+import Reportes from '../pages/Reportes.jsx'
+import Configuracion from '../pages/Configuracion.jsx'
 
 function Rutas() {
   return (
@@ -8,6 +11,9 @@ function Rutas() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/mapa" element={<Mapa />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/reportes" element={<Reportes />} />
+        <Route path="/configuracion" element={<Configuracion />} />
         <Route
           path="*"
           element={(
