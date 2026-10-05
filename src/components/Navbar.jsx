@@ -1,25 +1,18 @@
-
 function Navbar() {
   return (
     <header>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div className="container-fluid">
-
           <a className="navbar-brand fw-bold d-flex align-items-center" href="/">
             <img
-              src="/image/logogota..png"
+              src="/img/logogota..png"
               alt="Logo SIAI Tucumán"
-              style={{
-                width: "35px",
-                height: "35px",
-                marginRight: "8px"
-              }}
+              width="35"
+              height="35"
             />
-
             SIAI Tucumán
           </a>
 
-        
           <button
             className="navbar-toggler"
             type="button"
@@ -32,85 +25,72 @@ function Navbar() {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-      
           <div className="collapse navbar-collapse" id="navbarSIAI">
-
-            <ul className="navbar-nav ms-auto">
-
-          
+            <ul className="navbar-nav ms-auto align-items-lg-center">
               <li className="nav-item">
                 <a className="nav-link" href="/mapa">
-                  <i className="bi bi-map"></i>{" "}
+                  <i className="bi bi-map me-1"></i>
                   Mapa
                 </a>
               </li>
 
-           
               <li className="nav-item">
                 <a className="nav-link" href="/alertas">
-                  <i className="bi bi-exclamation-triangle"></i>{" "}
-                  Alertas{" "}
-                  <span className="badge bg-danger">4</span>
+                  <i className="bi bi-exclamation-triangle me-1"></i>
+                  Alertas
+                  <span className="badge bg-danger ms-1">4</span>
                 </a>
               </li>
 
-           
               <li className="nav-item">
                 <a className="nav-link" href="/estaciones">
-                  <i className="bi bi-broadcast"></i>{" "}
+                  <i className="bi bi-broadcast me-1"></i>
                   Estaciones
                 </a>
               </li>
 
-             
               <li className="nav-item">
                 <a className="nav-link" href="/mediciones">
-                  <i className="bi bi-graph-up"></i>{" "}
+                  <i className="bi bi-graph-up me-1"></i>
                   Mediciones
                 </a>
               </li>
 
-            
               <li className="nav-item">
                 <a className="nav-link" href="/historial">
-                  <i className="bi bi-clock-history"></i>{" "}
+                  <i className="bi bi-clock-history me-1"></i>
                   Historial
                 </a>
               </li>
 
-           
               <li className="nav-item">
                 <a className="nav-link" href="/usuarios">
-                  <i className="bi bi-people"></i>{" "}
+                  <i className="bi bi-people me-1"></i>
                   Usuarios
                 </a>
               </li>
 
-              
               <li className="nav-item">
                 <a className="nav-link" href="/reportes">
-                  <i className="bi bi-file-earmark-bar-graph"></i>{" "}
+                  <i className="bi bi-file-earmark-bar-graph me-1"></i>
                   Reportes
                 </a>
               </li>
 
-         
               <li className="nav-item">
                 <a className="nav-link" href="/configuracion">
-                  <i className="bi bi-gear"></i>{" "}
+                  <i className="bi bi-gear me-1"></i>
                   Configuración
                 </a>
               </li>
 
-       
-              <li className="nav-item ms-lg-2">
-                <a className="btn btn-primary" href="/login">
+              <li className="nav-item ms-lg-2 mt-2 mt-lg-0">
+                <a className="btn btn-primary px-3" href="/login">
+                  <i className="bi bi-box-arrow-in-right me-1"></i>
                   LOGIN
                 </a>
               </li>
-
             </ul>
-
           </div>
         </div>
       </nav>
