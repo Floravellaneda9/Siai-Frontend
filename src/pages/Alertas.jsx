@@ -1,6 +1,8 @@
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 
+import { Link } from 'react-router-dom'
+
 function Alertas() {
   return (
     <>
@@ -16,10 +18,10 @@ function Alertas() {
               Alertas generadas por el sistema de monitoreo.
             </p>
           </div>
-          <a className="btn btn-primary" href="/agregar-alerta">
+          <Link className="btn btn-primary" to="/agregar-alerta">
             <i className="bi bi-plus-lg me-1"></i>
             Nueva alerta
-          </a>
+          </Link>
         </div>
 
         <div className="row g-4">

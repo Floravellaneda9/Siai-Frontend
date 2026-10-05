@@ -1,6 +1,8 @@
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 
+import { Link } from 'react-router-dom'
+
 function AgregarAlerta() {
   return (
     <>
@@ -70,10 +72,10 @@ function AgregarAlerta() {
                       <i className="bi bi-plus-circle me-1"></i>
                       Agregar alerta
                     </button>
-                    <a href="/alertas" className="btn btn-outline-secondary">
+                    <Link to="/alertas" className="btn btn-outline-secondary">
                       <i className="bi bi-x-lg me-1"></i>
                       Cancelar
-                    </a>
+                    </Link>
                   </div>
                 </form>
               </div>

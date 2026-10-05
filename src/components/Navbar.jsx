@@ -1,9 +1,11 @@
+import { Link } from 'react-router-dom'
+
 function Navbar() {
   return (
     <header>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div className="container-fluid">
-          <a className="navbar-brand fw-bold d-flex align-items-center" href="/">
+          <Link className="navbar-brand fw-bold d-flex align-items-center" to="/">
             <img
               src="/img/logogota..png"
               alt="Logo SIAI Tucumán"
@@ -11,7 +13,7 @@ function Navbar() {
               height="35"
             />
             SIAI Tucumán
-          </a>
+          </Link>
 
           <button
             className="navbar-toggler"
@@ -28,67 +30,67 @@ function Navbar() {
           <div className="collapse navbar-collapse" id="navbarSIAI">
             <ul className="navbar-nav ms-auto align-items-lg-center">
               <li className="nav-item">
-                <a className="nav-link" href="/mapa">
+                <Link className="nav-link" to="/mapa">
                   <i className="bi bi-map me-1"></i>
                   Mapa
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/alertas">
+                <Link className="nav-link" to="/alertas">
                   <i className="bi bi-exclamation-triangle me-1"></i>
                   Alertas
                   <span className="badge bg-danger ms-1">4</span>
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/estaciones">
+                <Link className="nav-link" to="/estaciones">
                   <i className="bi bi-broadcast me-1"></i>
                   Estaciones
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/mediciones">
+                <Link className="nav-link" to="/mediciones">
                   <i className="bi bi-graph-up me-1"></i>
                   Mediciones
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/historial">
+                <Link className="nav-link" to="/historial">
                   <i className="bi bi-clock-history me-1"></i>
                   Historial
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/usuarios">
+                <Link className="nav-link" to="/usuarios">
                   <i className="bi bi-people me-1"></i>
                   Usuarios
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/reportes">
+                <Link className="nav-link" to="/reportes">
                   <i className="bi bi-file-earmark-bar-graph me-1"></i>
                   Reportes
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item">
-                <a className="nav-link" href="/configuracion">
+                <Link className="nav-link" to="/configuracion">
                   <i className="bi bi-gear me-1"></i>
                   Configuración
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item ms-lg-2 mt-2 mt-lg-0">
-                <a className="btn btn-primary px-3" href="/login">
+                <Link className="btn btn-primary px-3" to="/login">
                   <i className="bi bi-box-arrow-in-right me-1"></i>
                   LOGIN
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
