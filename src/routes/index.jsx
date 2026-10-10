@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import Home from '../pages/Home.jsx'
 import Login from '../pages/Login.jsx'
+import Registro from '../pages/registro.jsx'
 import Mapa from '../pages/Mapa.jsx'
 import Alertas from '../pages/Alertas.jsx'
 import AgregarAlerta from '../pages/AgregarAlerta.jsx'
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+  },
+  {
+    path: '/registro',
+    element: <Registro />,
   },
   {
     path: '/mapa',

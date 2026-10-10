@@ -1,6 +1,49 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { supabase } from '../supabase.js'
 
 function Navbar() {
+  const navigate = useNavigate()
+  const [session, setSession] = useState(null)
+  const [authChecked, setAuthChecked] = useState(!supabase)
+  const [loggingOut, setLoggingOut] = useState(false)
+
+  useEffect(() => {
+    if (!supabase) {
+      return undefined
+    }
+
+    let isMounted = true
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+      if (isMounted) {
+        setSession(currentSession)
+        setAuthChecked(true)
+      }
+    })
+
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      if (isMounted) {
+        setSession(currentSession)
+        setAuthChecked(true)
+      }
+    })
+
+    return () => {
+      isMounted = false
+      subscription.unsubscribe()
+    }
+  }, [])
+
+  async function handleLogout() {
+    if (!supabase) return
+
+    setLoggingOut(true)
+    const { error } = await supabase.auth.signOut()
+    setLoggingOut(false)
+
+    if (!error) navigate('/login')
+  }
+
   return (
     <header>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -86,12 +129,21 @@ function Navbar() {
                 </Link>
               </li>
 
-              <li className="nav-item ms-lg-2 mt-2 mt-lg-0">
-                <Link className="btn btn-primary px-3" to="/login">
-                  <i className="bi bi-box-arrow-in-right me-1"></i>
-                  LOGIN
-                </Link>
-              </li>
+              {authChecked && (
+                <li className="nav-item ms-lg-2 mt-2 mt-lg-0">
+                  {session ? (
+                    <button className="btn btn-outline-light px-3" type="button" onClick={handleLogout} disabled={loggingOut}>
+                      <i className="bi bi-box-arrow-right me-1"></i>
+                      {loggingOut ? 'Cerrando sesión...' : 'Cerrar sesión'}
+                    </button>
+                  ) : (
+                    <Link className="btn btn-primary px-3" to="/login">
+                      <i className="bi bi-box-arrow-in-right me-1"></i>
+                      LOGIN
+                    </Link>
+                  )}
+                </li>
+              )}
             </ul>
           </div>
         </div>
