@@ -1,7 +1,24 @@
+import { useState } from 'react'
+import Swal from 'sweetalert2'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
+import { advertencia, error, cargando, cerrar, toast } from '../components/alertas.jsx'
+
+
+const hoy = () => new Date().toLocaleDateString('en-CA')
+
+async function pedirReporte(tipo, desde, hasta) {
+
+  await new Promise((resolve) => setTimeout(resolve, 1500))
+  return 1
+}
 
 function Reportes() {
+  const [tipo, setTipo] = useState('Alertas')
+  const [desde, setDesde] = useState('')
+  const [hasta, setHasta] = useState('')
+  const [generando, setGenerando] = useState(false)
+
   const reportes = [
     {
       titulo: 'Reporte de alertas',
@@ -22,6 +39,79 @@ function Reportes() {
       color: 'var(--accent)'
     }
   ]
+
+  
+  async function ejecutar(nombre, tipoReporte, d, h) {
+    setGenerando(true)
+    cargando('Generando reporte...')
+
+    try {
+      const total = await pedirReporte(tipoReporte, d, h)
+      cerrar()
+
+      if (total === 0) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Sin resultados',
+          text: 'No hay datos para el período seleccionado.',
+          confirmButtonText: 'Aceptar'
+        })
+      } else {
+        toast.fire({ icon: 'success', title: `${nombre} generado correctamente` })
+      }
+    } catch {
+      error('No se pudo generar el reporte', 'Ocurrió un problema. Intentá nuevamente en unos minutos.')
+    } finally {
+      setGenerando(false)
+    }
+  }
+
+  
+  async function generarRapido(reporte) {
+    const { isConfirmed } = await Swal.fire({
+      icon: 'question',
+      title: `¿Generar "${reporte.titulo}"?`,
+      text: 'Se generará el reporte con los datos más recientes.',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, generar',
+      cancelButtonText: 'Cancelar'
+    })
+    if (!isConfirmed) return
+
+    await ejecutar(reporte.titulo, reporte.titulo, '', '')
+  }
+
+  
+  async function generarPersonalizado() {
+    if (!desde || !hasta) {
+      advertencia('Fechas incompletas', 'Seleccioná las fechas "Desde" y "Hasta".')
+      return
+    }
+    if (desde > hasta) {
+      advertencia('Rango inválido', 'La fecha "Desde" no puede ser posterior a "Hasta".')
+      return
+    }
+    if (hasta > hoy()) {
+      advertencia('Fecha inválida', 'La fecha "Hasta" no puede ser futura.')
+      return
+    }
+
+   
+    const dias = (new Date(hasta) - new Date(desde)) / (1000 * 60 * 60 * 24)
+    if (dias > 365) {
+      const { isConfirmed } = await Swal.fire({
+        icon: 'warning',
+        title: 'Período muy extenso',
+        text: 'El rango supera un año y el reporte puede demorar. ¿Querés continuar?',
+        showCancelButton: true,
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar'
+      })
+      if (!isConfirmed) return
+    }
+
+    await ejecutar(`Reporte de ${tipo.toLowerCase()}`, tipo, desde, hasta)
+  }
 
   return (
     <>
@@ -47,7 +137,11 @@ function Reportes() {
                   <p className="card-text text-secondary">
                     {reporte.descripcion}
                   </p>
-                  <button className="btn btn-primary">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => generarRapido(reporte)}
+                    disabled={generando}
+                  >
                     <i className="bi bi-file-earmark-pdf me-1"></i>
                     Generar
                   </button>
@@ -67,11 +161,16 @@ function Reportes() {
           <div className="card-body">
             <div className="row g-3">
               <div className="col-md-4">
-                <label className="form-label">
+                <label className="form-label" htmlFor="tipo-reporte">
                   <i className="bi bi-tag me-1"></i>
                   Tipo de reporte
                 </label>
-                <select className="form-select">
+                <select
+                  id="tipo-reporte"
+                  className="form-select"
+                  value={tipo}
+                  onChange={(e) => setTipo(e.target.value)}
+                >
                   <option>Alertas</option>
                   <option>Mediciones</option>
                   <option>Precipitaciones</option>
@@ -79,21 +178,39 @@ function Reportes() {
                 </select>
               </div>
               <div className="col-md-3">
-                <label className="form-label">
+                <label className="form-label" htmlFor="fecha-desde">
                   <i className="bi bi-calendar me-1"></i>
                   Desde
                 </label>
-                <input type="date" className="form-control" />
+                <input
+                  id="fecha-desde"
+                  type="date"
+                  className="form-control"
+                  max={hoy()}
+                  value={desde}
+                  onChange={(e) => setDesde(e.target.value)}
+                />
               </div>
               <div className="col-md-3">
-                <label className="form-label">
+                <label className="form-label" htmlFor="fecha-hasta">
                   <i className="bi bi-calendar me-1"></i>
                   Hasta
                 </label>
-                <input type="date" className="form-control" />
+                <input
+                  id="fecha-hasta"
+                  type="date"
+                  className="form-control"
+                  max={hoy()}
+                  value={hasta}
+                  onChange={(e) => setHasta(e.target.value)}
+                />
               </div>
               <div className="col-md-2 d-flex align-items-end">
-                <button className="btn btn-success w-100">
+                <button
+                  className="btn btn-success w-100"
+                  onClick={generarPersonalizado}
+                  disabled={generando}
+                >
                   <i className="bi bi-download me-1"></i>
                   Generar
                 </button>
