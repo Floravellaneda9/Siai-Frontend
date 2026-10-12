@@ -14,6 +14,16 @@ export const advertencia = (title, text) =>
 export const error = (title, text) =>
   Swal.fire({ icon: 'error', title, text, confirmButtonText: 'Aceptar' })
 
+export const emergencia = (title, text) =>
+  Swal.fire({
+    iconHtml: '<i class="bi bi-exclamation-octagon-fill" style="font-size:3.5rem;color:#dc3545"></i>',
+    customClass: { icon: 'swal-sin-borde' },
+    title,
+    text,
+    confirmButtonText: 'Entendido',
+    confirmButtonColor: '#dc3545',
+  })
+
 export const cargando = (title = 'Procesando...') =>
   Swal.fire({
     title,
