@@ -4,55 +4,7 @@ import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 import { advertencia, toast } from '../components/alertas.jsx'
 
-const USUARIOS_INICIALES = [
-  {
-    id: 1,
-    nombre: 'Administrador',
-    email: 'admin@siai.com',
-    rol: 'Administrador',
-    rolBadgeColor: 'primary',
-    estado: 'Activo',
-    estadoBadgeColor: 'success',
-    ultimoAcceso: 'Hoy 18:40'
-  },
-  {
-    id: 2,
-    nombre: 'Operador01',
-    email: 'operador@siai.com',
-    rol: 'Operador',
-    rolBadgeColor: 'secondary',
-    estado: 'Activo',
-    estadoBadgeColor: 'success',
-    ultimoAcceso: 'Hoy 18:32'
-  }
-]
 
-const COLOR_ROL = { Administrador: 'primary', Operador: 'secondary' }
-const COLOR_ESTADO = { Activo: 'success', Inactivo: 'danger' }
-
-const EMAIL_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-
-const escapar = (txt) =>
-  String(txt).replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  }[c]))
-
-
-const formularioHtml = (u = {}, esNuevo = false) => `
-  <input id="swal-nombre" class="swal2-input" placeholder="Nombre de usuario" value="${escapar(u.nombre || '')}">
-  <input id="swal-email" type="email" class="swal2-input" placeholder="Email" value="${escapar(u.email || '')}">
-  <select id="swal-rol" class="swal2-select">
-    <option value="Operador" ${u.rol === 'Operador' ? 'selected' : ''}>Operador</option>
-    <option value="Administrador" ${u.rol === 'Administrador' ? 'selected' : ''}>Administrador</option>
-  </select>
-  ${esNuevo
-    ? '<input id="swal-pass" type="password" class="swal2-input" placeholder="Contraseña (mínimo 8 caracteres)">'
-    : `<select id="swal-estado" class="swal2-select">
-         <option value="Activo" ${u.estado === 'Activo' ? 'selected' : ''}>Activo</option>
-         <option value="Inactivo" ${u.estado === 'Inactivo' ? 'selected' : ''}>Inactivo</option>
-       </select>`}
-`
 
 function Usuarios() {
   const [usuarios, setUsuarios] = useState(USUARIOS_INICIALES)

@@ -1,53 +1,62 @@
+import { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
+import { obtenerEstaciones, obtenerMediciones } from '../services/ina_Api.js'
+
+const fechaLocal = (fecha) => {
+  const anio = fecha.getFullYear()
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0')
+  const dia = String(fecha.getDate()).padStart(2, '0')
+  return `${anio}-${mes}-${dia}`
+}
 
 function Mediciones() {
-  const mediciones = [
-    {
-      fecha: '16/09/2026 18:47',
-      estacion: 'E-014',
-      nivel: '2.18 m',
-      nivelColor: 'var(--danger)',
-      precipitacion: '112.8 mm',
-      humedad: '86%',
-      temperatura: '19.2 °C',
-      estado: 'Crítico',
-      badgeColor: 'danger'
-    },
-    {
-      fecha: '16/09/2026 18:46',
-      estacion: 'E-008',
-      nivel: '1.78 m',
-      nivelColor: 'var(--warning)',
-      precipitacion: '72.1 mm',
-      humedad: '82%',
-      temperatura: '19.8 °C',
-      estado: 'Riesgo',
-      badgeColor: 'warning'
-    },
-    {
-      fecha: '16/09/2026 18:45',
-      estacion: 'E-004',
-      nivel: '1.42 m',
-      nivelColor: 'var(--warning)',
-      precipitacion: '48.7 mm',
-      humedad: '78%',
-      temperatura: '20.1 °C',
-      estado: 'Precaución',
-      badgeColor: 'warning'
-    },
-    {
-      fecha: '16/09/2026 18:44',
-      estacion: 'E-001',
-      nivel: '0.82 m',
-      nivelColor: 'var(--success)',
-      precipitacion: '12.4 mm',
-      humedad: '71%',
-      temperatura: '21.4 °C',
-      estado: 'Normal',
-      badgeColor: 'success'
+  const hoy = fechaLocal(new Date())
+  const haceSieteDias = new Date()
+  haceSieteDias.setDate(haceSieteDias.getDate() - 7)
+  const [estaciones, setEstaciones] = useState([])
+  const [siteCode, setSiteCode] = useState('')
+  const [desde, setDesde] = useState(fechaLocal(haceSieteDias))
+  const [hasta, setHasta] = useState(hoy)
+  const [mediciones, setMediciones] = useState([])
+  const [cargandoEstaciones, setCargandoEstaciones] = useState(true)
+  const [cargandoMediciones, setCargandoMediciones] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    obtenerEstaciones()
+      .then(setEstaciones)
+      .catch((err) => setError(`No se pudieron cargar las estaciones INA: ${err.message}`))
+      .finally(() => setCargandoEstaciones(false))
+  }, [])
+
+  async function buscarMediciones(event) {
+    event.preventDefault()
+    if (!siteCode) {
+      setError('Seleccioná una estación para consultar sus mediciones.')
+      return
     }
-  ]
+    if (!desde || !hasta || desde > hasta) {
+      setError('Seleccioná un rango de fechas válido.')
+      return
+    }
+
+    setCargandoMediciones(true)
+    setError('')
+    try {
+      const resultado = await obtenerMediciones({ siteCode, timeStart: desde, timeEnd: hasta })
+      setMediciones(resultado.data || [])
+    } catch (err) {
+      setMediciones([])
+      setError(`No se pudieron cargar las mediciones: ${err.message}`)
+    } finally {
+      setCargandoMediciones(false)
+    }
+  }
+
+  const estacionSeleccionada = estaciones.find(
+    (estacion) => String(estacion.sitecode) === siteCode
+  )
 
   return (
     <>
@@ -64,45 +73,72 @@ function Mediciones() {
         </div>
 
         {/* Filtros */}
-        <div className="card mb-4">
+        <form className="card mb-4" onSubmit={buscarMediciones}>
           <div className="card-body">
             <div className="row g-3">
               <div className="col-md-4">
-                <label className="form-label">
+                <label className="form-label" htmlFor="estacion-ina">
                   <i className="bi bi-broadcast me-1"></i>
                   Estación
                 </label>
-                <select className="form-select">
-                  <option>Todas</option>
-                  <option>E-001</option>
-                  <option>E-004</option>
-                  <option>E-008</option>
-                  <option>E-014</option>
+                <select
+                  id="estacion-ina"
+                  className="form-select"
+                  value={siteCode}
+                  onChange={(event) => setSiteCode(event.target.value)}
+                  disabled={cargandoEstaciones}
+                  required
+                >
+                  <option value="">
+                    {cargandoEstaciones ? 'Cargando estaciones...' : 'Seleccionar estación INA'}
+                  </option>
+                  {estaciones.map((estacion) => (
+                    <option key={estacion.sitecode} value={estacion.sitecode}>
+                      {estacion.sitecode} · {estacion.nombre}
+                      {estacion.distrito ? ` · ${estacion.distrito}` : ''}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="col-md-3">
-                <label className="form-label">
+                <label className="form-label" htmlFor="mediciones-desde">
                   <i className="bi bi-calendar me-1"></i>
                   Desde
                 </label>
-                <input type="date" className="form-control" />
+                <input
+                  id="mediciones-desde"
+                  type="date"
+                  className="form-control"
+                  value={desde}
+                  max={hoy}
+                  onChange={(event) => setDesde(event.target.value)}
+                />
               </div>
               <div className="col-md-3">
-                <label className="form-label">
+                <label className="form-label" htmlFor="mediciones-hasta">
                   <i className="bi bi-calendar me-1"></i>
                   Hasta
                 </label>
-                <input type="date" className="form-control" />
+                <input
+                  id="mediciones-hasta"
+                  type="date"
+                  className="form-control"
+                  value={hasta}
+                  max={hoy}
+                  onChange={(event) => setHasta(event.target.value)}
+                />
               </div>
               <div className="col-md-2 d-flex align-items-end">
-                <button className="btn btn-primary w-100">
+                <button className="btn btn-primary w-100" type="submit" disabled={cargandoMediciones || cargandoEstaciones}>
                   <i className="bi bi-search me-1"></i>
-                  Buscar
+                  {cargandoMediciones ? 'Buscando...' : 'Buscar'}
                 </button>
               </div>
             </div>
           </div>
-        </div>
+        </form>
+
+        {error && <div className="alert alert-danger" role="alert">{error}</div>}
 
         {/* Tabla de mediciones */}
         <div className="card">
@@ -118,25 +154,31 @@ function Mediciones() {
                 <tr>
                   <th>Fecha</th>
                   <th>Estación</th>
-                  <th>Nivel</th>
-                  <th>Precipitación</th>
-                  <th>Humedad</th>
-                  <th>Temperatura</th>
-                  <th>Estado</th>
+                  <th>Variable</th>
+                  <th>Valor</th>
+                  <th>Unidad</th>
                 </tr>
               </thead>
               <tbody>
-                {mediciones.map((medicion, index) => (
-                  <tr key={index}>
-                    <td>{medicion.fecha}</td>
-                    <td>{medicion.estacion}</td>
-                    <td><strong>{medicion.nivel}</strong></td>
-                    <td>{medicion.precipitacion}</td>
-                    <td>{medicion.humedad}</td>
-                    <td>{medicion.temperatura}</td>
-                    <td><span className={`badge text-bg-${medicion.badgeColor}`}>{medicion.estado}</span></td>
-                  </tr>
-                ))}
+                  {cargandoMediciones ? (
+                    <tr><td colSpan="5" className="text-center py-4">Cargando mediciones INA...</td></tr>
+                  ) : mediciones.length > 0 ? (
+                    mediciones.map((medicion) => (
+                      <tr key={medicion.obs_id || `${medicion.timestart}-${medicion.valor}`}>
+                        <td>{medicion.timestart ? new Date(medicion.timestart).toLocaleString() : 'Sin fecha'}</td>
+                        <td>{estacionSeleccionada?.nombre || siteCode}</td>
+                        <td>{medicion.var_abrev || 'Altura'}</td>
+                        <td><strong>{medicion.valor ?? 'Sin dato'}</strong></td>
+                        <td>{medicion.unit_abrev || 'm'}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center text-secondary py-4">
+                        {siteCode ? 'No hay mediciones para la estación y el período seleccionados.' : 'Seleccioná una estación y un período para consultar los datos INA.'}
+                      </td>
+                    </tr>
+                  )}
               </tbody>
             </table>
           </div>
