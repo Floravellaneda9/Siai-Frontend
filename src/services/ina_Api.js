@@ -1,23 +1,28 @@
+import axios from 'axios'
 
 const INA_BASE_URL = 'https://alerta.ina.gob.ar/pub/datos'
 
 function crearUrl(recurso, parametros) {
-  return `${INA_BASE_URL}/${recurso}&${parametros.toString()}`
+  return `${INA_BASE_URL}/${recurso}?${parametros.toString()}`
 }
 
 async function consultarINA(url) {
-  const response = await fetch(url)
+  try {
+    const { data } = await axios.get(url)
 
-  if (!response.ok) {
-    throw new Error(`Error al consultar INA: ${response.status}`)
+    if (data?.mensaje && data?.title) {
+      throw new Error(data.mensaje)
+    }
+
+    return data
+  } catch (error) {
+    const mensaje = error.response?.data?.mensaje
+      || error.response?.data?.message
+      || error.message
+      || 'Error al consultar INA'
+
+    throw new Error(mensaje)
   }
-
-  const resultado = await response.json()
-  if (resultado.mensaje && resultado.title) {
-    throw new Error(resultado.mensaje)
-  }
-
-  return resultado
 }
 
 export async function obtenerEstaciones() {
@@ -33,10 +38,10 @@ export async function obtenerMediciones({
   timeStart,
   timeEnd,
 }) {
-  const hoy = new Date();
-  const inicio = new Date(hoy);
+  const hoy = new Date()
+  const inicio = new Date(hoy)
 
-  inicio.setDate(hoy.getDate() - dias);
+  inicio.setDate(hoy.getDate() - dias)
 
   const fecha = (date) => {
     const anio = date.getFullYear()
