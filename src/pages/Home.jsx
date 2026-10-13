@@ -1,7 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Swal from 'sweetalert2'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 import Cards from '../components/Cards.jsx'
+import { emergencia } from '../components/alertas.jsx'
+
+// Cuando tengas backend, estos datos vendrán de la API
+const ESTADOS = [
+  { titulo: 'Zonas normales', cantidad: 18, texto: 'Sin riesgo actual', color: 'success' },
+  { titulo: 'Precaución', cantidad: 5, texto: 'Monitoreo preventivo', color: 'warning' },
+  { titulo: 'Riesgo', cantidad: 3, texto: 'Requiere atención', color: 'danger' },
+  { titulo: 'Emergencia', cantidad: 1, texto: 'Atención inmediata', color: 'dark' }
+]
 
 function Home() {
   const [openAccordion, setOpenAccordion] = useState('capital')
@@ -93,22 +103,74 @@ function Home() {
     }
   ]
 
-  const estados = [
-    { titulo: 'Zonas normales', cantidad: 18, texto: 'Sin riesgo actual', color: 'success' },
-    { titulo: 'Precaución', cantidad: 5, texto: 'Monitoreo preventivo', color: 'warning' },
-    { titulo: 'Riesgo', cantidad: 3, texto: 'Requiere atención', color: 'danger' },
-    { titulo: 'Emergencia', cantidad: 1, texto: 'Atención inmediata', color: 'dark' }
-  ]
+  
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem('siai-aviso-home')) return
+      sessionStorage.setItem('siai-aviso-home', '1')
+    } catch {
+    
+    }
+
+    const emerg = ESTADOS.find((e) => e.titulo === 'Emergencia')?.cantidad || 0
+    const riesgo = ESTADOS.find((e) => e.titulo === 'Riesgo')?.cantidad || 0
+
+    if (emerg > 0 || riesgo > 0) {
+      const partes = []
+      if (emerg > 0) partes.push(`${emerg} en Emergencia`)
+      if (riesgo > 0) partes.push(`${riesgo} en Riesgo`)
+      emergencia(
+        'Atención: zonas en alerta',
+        `Hay zonas críticas en Tucumán: ${partes.join(' y ')}. Nivel más alto: 2.18 m en Río Marapa (E-014). Seguí las indicaciones oficiales.`
+      )
+    }
+  }, [])
 
   const toggleAccordion = (id) => {
     setOpenAccordion(openAccordion === id ? '' : id)
   }
 
+  function verZona(zona) {
+    Swal.fire({
+      title: zona.nombre,
+      text: zona.descripcion,
+      imageUrl: zona.imagen,
+      imageAlt: zona.nombre,
+      imageWidth: 400,
+      footer: 'Ante una emergencia, seguí las alertas oficiales del SIAI.',
+      confirmButtonText: 'Cerrar'
+    })
+  }
+
+  
+  const tarjetaZona = (zona, index) => (
+    <div className="col-md-4" key={index}>
+      <div
+        className="card shadow-sm h-100 rounded"
+        role="button"
+        tabIndex={0}
+        style={{ cursor: 'pointer' }}
+        onClick={() => verZona(zona)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            verZona(zona)
+          }
+        }}
+      >
+        <img src={zona.imagen} className="card-img-top rounded-top" alt={zona.nombre} />
+        <div className="card-body">
+          <h5 className="card-title">{zona.nombre}</h5>
+          <p className="card-text">{zona.descripcion}</p>
+        </div>
+      </div>
+    </div>
+  )
+
   return (
     <>
       <Navbar />
 
-      {/* Quiénes somos */}
       <section className="container py-5">
         <div className="border rounded shadow-sm p-4 bg-white">
           <h2 className="text-primary text-center">¿Quiénes somos?</h2>
@@ -120,7 +182,7 @@ function Home() {
         </div>
       </section>
 
-      {/* Qué hacemos */}
+    
       <section className="container py-5">
         <div className="border rounded shadow-sm p-4 bg-white">
           <h2 className="text-success text-center">¿Qué hacemos?</h2>
@@ -145,7 +207,7 @@ function Home() {
         </div>
       </section>
 
-      {/* Cómo funciona */}
+      
       <section className="container py-5">
         <div className="border rounded shadow-sm p-4 bg-white">
           <h2 className="text-info text-center">¿Cómo funciona?</h2>
@@ -156,7 +218,7 @@ function Home() {
         </div>
       </section>
 
-      {/* Estado general de Tucumán */}
+      
       <main className="container-fluid p-4">
         <div className="mb-4">
           <h3 className="h3 fw-bold text-primary">
@@ -175,7 +237,7 @@ function Home() {
           <strong>18:47:32</strong>
         </div>
 
-        <Cards estados={estados} />
+        <Cards estados={ESTADOS} />
 
         <div className="card shadow-sm mt-4">
           <div className="card-body">
@@ -197,7 +259,7 @@ function Home() {
         </div>
       </main>
 
-      {/* Zonas en Riesgo */}
+     
       <main className="container-fluid p-4">
         <section className="container my-5">
           <div className="bg-white rounded shadow p-4">
@@ -207,7 +269,7 @@ function Home() {
             </h2>
 
             <div className="accordion" id="localidadesAccordion">
-              {/* Capital */}
+            
               <div className="accordion-item">
                 <h2 className="accordion-header">
                   <button
@@ -221,23 +283,12 @@ function Home() {
                 <div className={`accordion-collapse collapse ${openAccordion === 'capital' ? 'show' : ''}`}>
                   <div className="accordion-body">
                     <div className="row g-4">
-                      {zonasRiesgo.capital.map((zona, index) => (
-                        <div className="col-md-4" key={index}>
-                          <div className="card shadow-sm h-100 rounded">
-                            <img src={zona.imagen} className="card-img-top rounded-top" alt={zona.nombre} />
-                            <div className="card-body">
-                              <h5 className="card-title">{zona.nombre}</h5>
-                              <p className="card-text">{zona.descripcion}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                      {zonasRiesgo.capital.map(tarjetaZona)}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* San Miguel de Tucumán */}
               <div className="accordion-item">
                 <h2 className="accordion-header">
                   <button
@@ -251,23 +302,13 @@ function Home() {
                 <div className={`accordion-collapse collapse ${openAccordion === 'sanMiguel' ? 'show' : ''}`}>
                   <div className="accordion-body">
                     <div className="row g-4">
-                      {zonasRiesgo.sanMiguel.map((zona, index) => (
-                        <div className="col-md-4" key={index}>
-                          <div className="card shadow-sm h-100 rounded">
-                            <img src={zona.imagen} className="card-img-top rounded-top" alt={zona.nombre} />
-                            <div className="card-body">
-                              <h5 className="card-title">{zona.nombre}</h5>
-                              <p className="card-text">{zona.descripcion}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                      {zonasRiesgo.sanMiguel.map(tarjetaZona)}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Zonas externas */}
+          
               <div className="accordion-item">
                 <h2 className="accordion-header">
                   <button
@@ -281,17 +322,7 @@ function Home() {
                 <div className={`accordion-collapse collapse ${openAccordion === 'externas' ? 'show' : ''}`}>
                   <div className="accordion-body">
                     <div className="row g-4">
-                      {zonasRiesgo.externas.map((zona, index) => (
-                        <div className="col-md-4" key={index}>
-                          <div className="card shadow-sm h-100 rounded">
-                            <img src={zona.imagen} className="card-img-top rounded-top" alt={zona.nombre} />
-                            <div className="card-body">
-                              <h5 className="card-title">{zona.nombre}</h5>
-                              <p className="card-text">{zona.descripcion}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                      {zonasRiesgo.externas.map(tarjetaZona)}
                     </div>
                   </div>
                 </div>

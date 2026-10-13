@@ -1,8 +1,57 @@
 import { useState } from 'react'
 import { CircleMarker, MapContainer, Popup, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import { useEffect } from 'react'
+import Swal from 'sweetalert2'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
+import { emergencia } from '../components/alertas.jsx'
+
+
+const ZONAS = [
+  {
+    estado: 'Normal',
+    titulo: 'Zonas normales',
+    cantidad: 18,
+    icono: 'bi-check-circle',
+    borde: 'border-success',
+    badge: 'success',
+    alertaIcon: 'success',
+    mensaje: 'Estas zonas funcionan con normalidad. No requieren acción.'
+  },
+  {
+    estado: 'Precaución',
+    titulo: 'Precaución',
+    cantidad: 5,
+    icono: 'bi-exclamation-circle',
+    borde: 'border-warning',
+    badge: 'warning',
+    alertaIcon: 'warning',
+    mensaje: 'Los valores están por encima de lo habitual. Se recomienda seguimiento.'
+  },
+  {
+    estado: 'Riesgo',
+    titulo: 'Riesgo',
+    cantidad: 3,
+    icono: 'bi-exclamation-triangle',
+    borde: 'border-danger',
+    badge: 'danger',
+    alertaIconHtml:
+      '<i class="bi bi-exclamation-triangle-fill" style="font-size:3.5rem;color:#fd7e14"></i>',
+    mensaje: 'Superan el umbral de riesgo. Se recomienda avisar a Defensa Civil.'
+  },
+  {
+    estado: 'Emergencia',
+    titulo: 'Emergencia',
+    cantidad: 1,
+    icono: 'bi-shield-exclamation',
+    borde: 'border-dark',
+    badge: 'dark',
+    alertaIconHtml:
+      '<i class="bi bi-exclamation-octagon-fill" style="font-size:3.5rem;color:#dc3545"></i>',
+    mensaje: 'Nivel crítico. Se requiere acción inmediata.'
+  }
+]
 
 const estaciones = [
   {
@@ -59,6 +108,30 @@ function Mapa() {
   }
 
   const estacionesVisibles = estaciones.filter((estacion) => estadosVisibles.includes(estacion.estado))
+
+  useEffect(() => {
+    const emerg = ZONAS.find((z) => z.estado === 'Emergencia')?.cantidad || 0
+    const riesgo = ZONAS.find((z) => z.estado === 'Riesgo')?.cantidad || 0
+
+    if (emerg > 0 || riesgo > 0) {
+      const partes = []
+      if (emerg > 0) partes.push(`${emerg} en Emergencia`)
+      if (riesgo > 0) partes.push(`${riesgo} en Riesgo`)
+      emergencia('Zonas en alerta', `Hay zonas críticas en la provincia: ${partes.join(' y ')}.`)
+    }
+  }, [])
+
+
+  function verZona(zona) {
+    Swal.fire({
+      ...(zona.alertaIconHtml
+        ? { iconHtml: zona.alertaIconHtml, customClass: { icon: 'swal-sin-borde' } }
+        : { icon: zona.alertaIcon }),
+      title: `${zona.titulo}: ${zona.cantidad} ${zona.cantidad === 1 ? 'zona' : 'zonas'}`,
+      text: zona.mensaje,
+      confirmButtonText: 'Cerrar'
+    })
+  }
 
   return (
     <>
@@ -152,54 +225,32 @@ function Mapa() {
         </div>
 
         <div className="row g-4">
-          <div className="col-md-6 col-xl-3">
-            <div className="card border-success h-100">
-              <div className="card-body">
-                <h6 className="text-secondary text-uppercase">
-                  <i className="bi bi-check-circle me-1"></i>
-                  Zonas normales
-                </h6>
-                <h2 className="display-4 fw-bold my-2">18</h2>
-                <span className="badge text-bg-success">Normal</span>
+          {ZONAS.map((zona) => (
+            <div className="col-md-6 col-xl-3" key={zona.estado}>
+              <div
+                className={`card ${zona.borde} h-100`}
+                role="button"
+                tabIndex={0}
+                style={{ cursor: 'pointer' }}
+                onClick={() => verZona(zona)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    verZona(zona)
+                  }
+                }}
+              >
+                <div className="card-body">
+                  <h6 className="text-secondary text-uppercase">
+                    <i className={`bi ${zona.icono} me-1`}></i>
+                    {zona.titulo}
+                  </h6>
+                  <h2 className="display-4 fw-bold my-2">{zona.cantidad}</h2>
+                  <span className={`badge text-bg-${zona.badge}`}>{zona.estado}</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-6 col-xl-3">
-            <div className="card border-warning h-100">
-              <div className="card-body">
-                <h6 className="text-secondary text-uppercase">
-                  <i className="bi bi-exclamation-circle me-1"></i>
-                  Precaución
-                </h6>
-                <h2 className="display-4 fw-bold my-2">5</h2>
-                <span className="badge text-bg-warning">Precaución</span>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6 col-xl-3">
-            <div className="card border-danger h-100">
-              <div className="card-body">
-                <h6 className="text-secondary text-uppercase">
-                  <i className="bi bi-exclamation-triangle me-1"></i>
-                  Riesgo
-                </h6>
-                <h2 className="display-4 fw-bold my-2">3</h2>
-                <span className="badge text-bg-danger">Riesgo</span>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6 col-xl-3">
-            <div className="card border-dark h-100">
-              <div className="card-body">
-                <h6 className="text-secondary text-uppercase">
-                  <i className="bi bi-shield-exclamation me-1"></i>
-                  Emergencia
-                </h6>
-                <h2 className="display-4 fw-bold my-2">1</h2>
-                <span className="badge text-bg-dark">Emergencia</span>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </main>
       <Footer />

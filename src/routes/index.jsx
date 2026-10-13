@@ -12,6 +12,7 @@ import Reportes from '../pages/Reportes.jsx'
 import Usuarios from '../pages/Usuarios.jsx'
 import Configuracion from '../pages/Configuracion.jsx'
 import Admi from '../pages/Admi.jsx'
+import NoEncontrada from '../pages/NoEncontrada.jsx'
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,12 @@ const router = createBrowserRouter([
     path: '/admi',
     element: <Admi />,
   },
+
+    {
+    path: '*',
+    element: <NoEncontrada />,
+  },
+
 ])
 
 export default router

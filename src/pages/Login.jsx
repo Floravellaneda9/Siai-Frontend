@@ -1,8 +1,7 @@
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { isSupabaseConfigured, supabase } from '../supabase.js'
 import Swal from 'sweetalert2'
 
@@ -54,7 +53,7 @@ function Login() {
       <main className="container flex-grow-1 d-flex align-items-center justify-content-center py-5">
         <form className="col-12 col-md-8 col-lg-5 p-4 p-md-5 border rounded shadow bg-white" aria-labelledby="login-title" onSubmit={handleLogin}>
           <div className="text-center mb-4">
-            <img src="/image/logogota..png" alt="Logo SIAI Tucumán" className="img-fluid" width="72" height="72" />
+            <img src="/img/logogota..png" alt="Logo SIAI Tucumán" className="img-fluid" width="72" height="72" />
           </div>
 
           <h1 id="login-title" className="h3 fw-bold text-center mb-1">
@@ -78,7 +77,6 @@ function Login() {
 
           <div className="mb-4">
             <label className="form-label" htmlFor="password">
-              <i className="bi bi-lock me-1"></i>
               Contraseña
             </label>
             <div className="input-group">
