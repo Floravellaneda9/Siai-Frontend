@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import Navbar from '../components/Navbar.jsx'
-import Footer from '../components/Footer.jsx'
 import { isSupabaseConfigured, supabase } from '../supabase.js'
 import Swal from 'sweetalert2'
 
@@ -48,62 +46,51 @@ function Login() {
   }
 
   return (
-    <>
-      <Navbar />
-      <main className="container flex-grow-1 d-flex align-items-center justify-content-center py-5">
-        <form className="col-12 col-md-8 col-lg-5 p-4 p-md-5 border rounded shadow bg-white" aria-labelledby="login-title" onSubmit={handleLogin}>
-          <div className="text-center mb-4">
-            <img src="/img/logogota..png" alt="Logo SIAI Tucumán" className="img-fluid" width="72" height="72" />
-          </div>
+    <form className="w-100 bg-white border rounded-4 shadow-sm p-4 p-md-5" style={{ maxWidth: 460 }} aria-labelledby="login-title" onSubmit={handleLogin}>
+      <div className="text-center mb-4">
+        <img src="/img/logogota..png" alt="Logo SIAI Tucumán" className="img-fluid" width="64" height="64" />
+      </div>
 
-          <h1 id="login-title" className="h3 fw-bold text-center mb-1">
-            Bienvenido
-          </h1>
-          <p className="text-secondary text-center mb-4">
-            Ingresá tu usuario y contraseña para acceder al sistema.
-          </p>
+      <h1 id="login-title" className="h3 fw-bold text-center mb-1">
+        Iniciar sesión
+      </h1>
+      <p className="text-secondary text-center mb-4">
+        Accedé al sistema de monitoreo y alertas de SIAI Tucumán.
+      </p>
 
-          <div className="mb-3">
-            <label className="form-label" htmlFor="email">
-              <i className="bi bi-envelope me-1"></i>
-              Mail
-            </label>
-            <div className="input-group">
-              <span className="input-group-text"><i className="bi bi-envelope"></i></span>
-              <input className="form-control" type="email" id="email" placeholder="Ingresá tu mail"
-                autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-            </div>
-          </div>
+      <div className="mb-3">
+        <label className="form-label" htmlFor="email">Correo electrónico</label>
+        <div className="input-group">
+          <span className="input-group-text"><i className="bi bi-envelope"></i></span>
+          <input className="form-control" type="email" id="email" placeholder="nombre@ejemplo.com"
+            autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+        </div>
+      </div>
 
-          <div className="mb-4">
-            <label className="form-label" htmlFor="password">
-              Contraseña
-            </label>
-            <div className="input-group">
-              <span className="input-group-text"><i className="bi bi-lock"></i></span>
-              <input className="form-control" type="password" id="password" placeholder="Ingresá tu contraseña"
-                autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required />
-            </div>
-          </div>
+      <div className="mb-4">
+        <label className="form-label" htmlFor="password">Contraseña</label>
+        <div className="input-group">
+          <span className="input-group-text"><i className="bi bi-lock"></i></span>
+          <input className="form-control" type="password" id="password" placeholder="Ingresá tu contraseña"
+            autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required />
+        </div>
+      </div>
 
-          <button type="submit" id="btn-login" className="btn btn-primary w-100 py-3" disabled={cargando}>
-            <i className="bi bi-box-arrow-in-right me-1"></i>
-            {cargando ? 'Ingresando...' : 'Ingresar'}
-          </button>
+      <button type="submit" id="btn-login" className="btn btn-primary w-100 py-2" disabled={cargando}>
+        <i className="bi bi-box-arrow-in-right me-1"></i>
+        {cargando ? 'Ingresando...' : 'Ingresar'}
+      </button>
 
-          <Link to="/registro" className="btn btn-outline-primary w-100 py-2 mt-3">
-            <i className="bi bi-person-plus me-1"></i>
-            Crear cuenta
-          </Link>
+      <Link to="/registro" className="btn btn-outline-secondary w-100 py-2 mt-2">
+        <i className="bi bi-person-plus me-1"></i>
+        Crear cuenta
+      </Link>
 
-          <p className="small text-secondary text-center mt-3 mb-0">
-            <i className="bi bi-shield-lock me-1"></i>
-            Acceso restringido a personal autorizado.
-          </p>
-        </form>
-      </main>
-      <Footer />
-    </>
+      <p className="small text-secondary text-center mt-3 mb-0">
+        <i className="bi bi-shield-lock me-1"></i>
+        Acceso restringido a personal autorizado.
+      </p>
+    </form>
   )
 }
 

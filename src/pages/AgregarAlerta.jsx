@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import Navbar from '../components/Navbar.jsx'
-import Footer from '../components/Footer.jsx'
 import { advertencia, error, cargando, cerrar, toast } from '../components/alertas.jsx'
+import PageHeader from '../components/layout/PageHeader.jsx'
+import { escaparHtml as escapar } from '../utils/html.js'
 
 const FORM_VACIO = { tipo: '', titulo: '', descripcion: '', estacion: '', ubicacion: '' }
 
@@ -19,19 +19,6 @@ const NOMBRE_TIPO = {
 const ICONO_HTML_POR_TIPO = {
   ROJA: '<i class="bi bi-exclamation-octagon-fill" style="font-size:3.5rem;color:#dc3545"></i>',
   NARANJA: '<i class="bi bi-exclamation-triangle-fill" style="font-size:3.5rem;color:#fd7e14"></i>'
-}
-
-function escapar(txt) {
-  return String(txt).replace(/[&<>"']/g, (c) => {
-    const mapa = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;'
-    }
-    return mapa[c]
-  })
 }
 
 
@@ -163,17 +150,13 @@ function AgregarAlerta() {
   }
 
   return (
-    <>
-      <Navbar />
-      <main className="container py-5">
-        <div className="row justify-content-center">
-          <div className="col-lg-8">
-            <div className="card">
-              <div className="card-body p-4 p-md-5">
-                <h1 className="h3 fw-bold mb-4">
-                  <i className="bi bi-exclamation-triangle me-2"></i>
-                  Nueva alerta
-                </h1>
+    <div>
+      <PageHeader icon="bi-exclamation-triangle" title="Nueva alerta" subtitle="Emití una alerta manual para notificar una situación relevante a los canales configurados." actions={<Link to="/alertas" className="btn btn-outline-secondary"><i className="bi bi-arrow-left me-1"></i>Volver al centro de alertas</Link>} />
+      <div className="row g-4">
+        <div className="col-lg-8">
+          <div className="card">
+            <div className="card-header"><strong><i className="bi bi-pencil-square me-1"></i>Información de la alerta</strong></div>
+            <div className="card-body p-4">
 
                 <form id="formAlerta" onSubmit={handleSubmit} noValidate>
                   <div className="mb-3">
@@ -259,10 +242,10 @@ function AgregarAlerta() {
                     />
                   </div>
 
-                  <div className="d-flex gap-2">
+                  <div className="d-flex gap-2 pt-2 border-top">
                     <button type="submit" className="btn btn-primary" disabled={enviando}>
-                      <i className="bi bi-plus-circle me-1"></i>
-                      Agregar alerta
+                      <i className="bi bi-send me-1"></i>
+                      Emitir alerta
                     </button>
                     <Link to="/alertas" className="btn btn-outline-secondary" onClick={cancelar}>
                       <i className="bi bi-x-lg me-1"></i>
@@ -270,13 +253,30 @@ function AgregarAlerta() {
                     </Link>
                   </div>
                 </form>
-              </div>
             </div>
           </div>
         </div>
-      </main>
-      <Footer />
-    </>
+        <div className="col-lg-4">
+          <div className="card mb-3">
+            <div className="card-header"><strong><i className="bi bi-info-circle me-1"></i>Guía rápida</strong></div>
+            <div className="card-body small text-secondary">
+              <ul className="mb-0 ps-3">
+                <li className="mb-2">Seleccioná el nivel según la severidad (Roja: crítica, Naranja: riesgo alto, Amarilla: precaución).</li>
+                <li className="mb-2">Usá el código de estación en formato <code>E-000</code>.</li>
+                <li className="mb-2">Describí la situación con datos observados y ubicación precisa.</li>
+                <li>Las alertas rojas solicitan confirmación adicional antes de emitirse.</li>
+              </ul>
+            </div>
+          </div>
+          <div className="card border-warning-subtle">
+            <div className="card-body">
+              <div className="fw-semibold mb-1"><i className="bi bi-broadcast me-1 text-warning"></i>Canales de difusión</div>
+              <p className="small text-secondary mb-0">La alerta se notificará según los canales activos configurados en el sistema (web, correo, mensajería).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

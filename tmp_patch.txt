@@ -1,0 +1,18 @@
+const ICONO_HTML_POR_TIPO = {
+  ROJA: '<i class="bi bi-exclamation-octagon-fill" style="font-size:3.5rem;color:#dc3545"></i>',
+  NARANJA: '<i class="bi bi-exclamation-triangle-fill" style="font-size:3.5rem;color:#fd7e14"></i>'
+}
+
+function escapar(txt) {
+  return String(txt).replace(/[&<>"']/g, (c) => {
+    const mapa = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }
+    return mapa[c]
+  })
+}
+

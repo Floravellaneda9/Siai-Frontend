@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar.jsx'
-import Footer from '../components/Footer.jsx'
+import { useEffect, useMemo, useState } from 'react'
 import { obtenerEstaciones, obtenerMediciones } from '../services/ina_Api.js'
+import PageHeader from '../components/layout/PageHeader.jsx'
+import SectionCard from '../components/ui/SectionCard.jsx'
+import EmptyState from '../components/ui/EmptyState.jsx'
 
 const fechaLocal = (fecha) => {
   const anio = fecha.getFullYear()
@@ -54,138 +55,84 @@ function Mediciones() {
     }
   }
 
-  const estacionSeleccionada = estaciones.find(
-    (estacion) => String(estacion.sitecode) === siteCode
+  const estacionSeleccionada = useMemo(
+    () => estaciones.find((estacion) => String(estacion.sitecode) === siteCode),
+    [estaciones, siteCode]
   )
 
   return (
-    <>
-      <Navbar />
-      <main className="container-fluid p-4">
-        <div className="mb-4">
-          <h1 className="h3 fw-bold">
-            <i className="bi bi-graph-up me-2"></i>
-            Mediciones
-          </h1>
-          <p className="text-secondary mb-0">
-            Datos registrados por las estaciones de monitoreo.
-          </p>
-        </div>
-
-        {/* Filtros */}
-        <form className="card mb-4" onSubmit={buscarMediciones}>
-          <div className="card-body">
-            <div className="row g-3">
-              <div className="col-md-4">
-                <label className="form-label" htmlFor="estacion-ina">
-                  <i className="bi bi-broadcast me-1"></i>
-                  Estación
-                </label>
-                <select
-                  id="estacion-ina"
-                  className="form-select"
-                  value={siteCode}
-                  onChange={(event) => setSiteCode(event.target.value)}
-                  disabled={cargandoEstaciones}
-                  required
-                >
-                  <option value="">
-                    {cargandoEstaciones ? 'Cargando estaciones...' : 'Seleccionar estación INA'}
+    <div>
+      <PageHeader icon="bi-graph-up" title="Mediciones" subtitle="Consulta de series y registros hidrométricos desde fuentes INA." />
+      <SectionCard title="Filtros de consulta" icon="bi-funnel" className="mb-3">
+        <form onSubmit={buscarMediciones}>
+          <div className="row g-3 align-items-end">
+            <div className="col-md-4">
+              <label className="form-label" htmlFor="estacion-ina">Estación</label>
+              <select id="estacion-ina" className="form-select" value={siteCode} onChange={(event) => setSiteCode(event.target.value)} disabled={cargandoEstaciones} required>
+                <option value="">{cargandoEstaciones ? 'Cargando estaciones...' : 'Seleccionar estación INA'}</option>
+                {estaciones.map((estacion) => (
+                  <option key={estacion.sitecode} value={estacion.sitecode}>
+                    {estacion.sitecode} · {estacion.nombre}{estacion.distrito ? ` · ${estacion.distrito}` : ''}
                   </option>
-                  {estaciones.map((estacion) => (
-                    <option key={estacion.sitecode} value={estacion.sitecode}>
-                      {estacion.sitecode} · {estacion.nombre}
-                      {estacion.distrito ? ` · ${estacion.distrito}` : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="col-md-3">
-                <label className="form-label" htmlFor="mediciones-desde">
-                  <i className="bi bi-calendar me-1"></i>
-                  Desde
-                </label>
-                <input
-                  id="mediciones-desde"
-                  type="date"
-                  className="form-control"
-                  value={desde}
-                  max={hoy}
-                  onChange={(event) => setDesde(event.target.value)}
-                />
-              </div>
-              <div className="col-md-3">
-                <label className="form-label" htmlFor="mediciones-hasta">
-                  <i className="bi bi-calendar me-1"></i>
-                  Hasta
-                </label>
-                <input
-                  id="mediciones-hasta"
-                  type="date"
-                  className="form-control"
-                  value={hasta}
-                  max={hoy}
-                  onChange={(event) => setHasta(event.target.value)}
-                />
-              </div>
-              <div className="col-md-2 d-flex align-items-end">
-                <button className="btn btn-primary w-100" type="submit" disabled={cargandoMediciones || cargandoEstaciones}>
-                  <i className="bi bi-search me-1"></i>
-                  {cargandoMediciones ? 'Buscando...' : 'Buscar'}
-                </button>
-              </div>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="mediciones-desde">Desde</label>
+              <input id="mediciones-desde" type="date" className="form-control" value={desde} max={hoy} onChange={(event) => setDesde(event.target.value)} />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="mediciones-hasta">Hasta</label>
+              <input id="mediciones-hasta" type="date" className="form-control" value={hasta} max={hoy} onChange={(event) => setHasta(event.target.value)} />
+            </div>
+            <div className="col-md-2">
+              <button className="btn btn-primary w-100" type="submit" disabled={cargandoMediciones || cargandoEstaciones}>
+                <i className="bi bi-search me-1"></i>{cargandoMediciones ? 'Buscando...' : 'Buscar'}
+              </button>
             </div>
           </div>
         </form>
+      </SectionCard>
 
-        {error && <div className="alert alert-danger" role="alert">{error}</div>}
+      {error && <div className="alert alert-danger" role="alert">{error}</div>}
 
-        {/* Tabla de mediciones */}
-        <div className="card">
-          <div className="card-header">
-            <strong>
-              <i className="bi bi-table me-1"></i>
-              Últimas mediciones
-            </strong>
-          </div>
-          <div className="table-responsive">
-            <table className="table table-hover align-middle mb-0">
-              <thead>
+      <SectionCard title="Resultados" subtitle={estacionSeleccionada ? `${estacionSeleccionada.nombre} · ${mediciones.length} registros` : 'Seleccioná una estación para consultar'} icon="bi-table" noBodyPadding>
+        <div className="table-responsive">
+          <table className="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Fecha y hora</th>
+                <th>Estación</th>
+                <th>Variable</th>
+                <th>Valor</th>
+                <th>Unidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cargandoMediciones ? (
+                <tr><td colSpan="5" className="text-center py-4"><div className="spinner-border spinner-border-sm text-primary me-2"></div>Cargando mediciones INA...</td></tr>
+              ) : mediciones.length > 0 ? (
+                mediciones.map((medicion) => (
+                  <tr key={medicion.obs_id || `${medicion.timestart}-${medicion.valor}`}>
+                    <td>{medicion.timestart ? new Date(medicion.timestart).toLocaleString() : 'Sin fecha'}</td>
+                    <td>{estacionSeleccionada?.nombre || siteCode}</td>
+                    <td><span className="badge text-bg-light text-dark border">{medicion.var_abrev || 'Altura'}</span></td>
+                    <td><strong>{medicion.valor ?? 'Sin dato'}</strong></td>
+                    <td>{medicion.unit_abrev || 'm'}</td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
-                  <th>Fecha</th>
-                  <th>Estación</th>
-                  <th>Variable</th>
-                  <th>Valor</th>
-                  <th>Unidad</th>
+                  <td colSpan="5">
+                    <EmptyState icon="bi-graph-up" title={siteCode ? 'Sin mediciones' : 'Consulta pendiente'} description={siteCode ? 'No hay mediciones para la estación y el período seleccionados.' : 'Seleccioná una estación y un período para consultar los datos INA.'} />
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                  {cargandoMediciones ? (
-                    <tr><td colSpan="5" className="text-center py-4">Cargando mediciones INA...</td></tr>
-                  ) : mediciones.length > 0 ? (
-                    mediciones.map((medicion) => (
-                      <tr key={medicion.obs_id || `${medicion.timestart}-${medicion.valor}`}>
-                        <td>{medicion.timestart ? new Date(medicion.timestart).toLocaleString() : 'Sin fecha'}</td>
-                        <td>{estacionSeleccionada?.nombre || siteCode}</td>
-                        <td>{medicion.var_abrev || 'Altura'}</td>
-                        <td><strong>{medicion.valor ?? 'Sin dato'}</strong></td>
-                        <td>{medicion.unit_abrev || 'm'}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center text-secondary py-4">
-                        {siteCode ? 'No hay mediciones para la estación y el período seleccionados.' : 'Seleccioná una estación y un período para consultar los datos INA.'}
-                      </td>
-                    </tr>
-                  )}
-              </tbody>
-            </table>
-          </div>
+              )}
+            </tbody>
+          </table>
         </div>
-      </main>
-      <Footer />
-    </>
+      </SectionCard>
+    </div>
   )
 }
 
