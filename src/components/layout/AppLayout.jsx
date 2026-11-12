@@ -1,32 +1,18 @@
 import { useState, useEffect } from 'react'
-import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Link, Outlet, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../../supabase.js'
+import { getDefaultPath, getVisibleNavItems, isPathAllowed } from '../../utils/auth.js'
 import './AppLayout.css'
-
-const NAV_ITEMS = [
-  { to: '/', label: 'Inicio', icon: 'bi-speedometer2', end: true },
-  { to: '/mapa', label: 'Mapa', icon: 'bi-map' },
-  { to: '/estaciones', label: 'Estaciones', icon: 'bi-broadcast', requiresRole: true },
-  { to: '/mediciones', label: 'Mediciones', icon: 'bi-graph-up' },
-  { to: '/alertas', label: 'Alertas', icon: 'bi-exclamation-triangle', badge: '3' },
-  { to: '/historial', label: 'Historial', icon: 'bi-clock-history' },
-  { to: '/usuarios', label: 'Usuarios', icon: 'bi-people', requiresRole: true },
-  { to: '/reportes', label: 'Reportes', icon: 'bi-file-earmark-bar-graph' },
-  { to: '/configuracion', label: 'Configuración', icon: 'bi-gear', requiresRole: true },
-]
 
 function AppLayout() {
   const [session, setSession] = useState(null)
   const [authChecked, setAuthChecked] = useState(!supabase)
   const [loggingOut, setLoggingOut] = useState(false)
   const navigate = useNavigate()
-  const role =
-    session?.user?.app_metadata?.rol ??
-    session?.user?.app_metadata?.role ??
-    session?.user?.user_metadata?.rol ??
-    session?.user?.user_metadata?.role
-  const hasManagementAccess =
-    typeof role === 'string' && ['admin', 'operador'].includes(role.toLowerCase())
+  const location = useLocation()
+
+  const navItems = getVisibleNavItems(session)
+  const defaultPath = getDefaultPath(session)
 
   useEffect(() => {
     if (!supabase) return undefined
@@ -57,6 +43,23 @@ function AppLayout() {
     if (!error) navigate('/login')
   }
 
+  if (!authChecked) {
+    return (
+      <div className="py-5 text-center" role="status" aria-live="polite">
+        <div className="spinner-border text-primary" aria-hidden="true"></div>
+        <p className="mt-3 text-secondary mb-0">Verificando sesión...</p>
+      </div>
+    )
+  }
+
+  if (!session && !isPathAllowed(location.pathname, session)) {
+    return <Navigate to="/login" replace state={{ from: location }} />
+  }
+
+  if (session && !isPathAllowed(location.pathname, session)) {
+    return <Navigate to={defaultPath} replace />
+  }
+
   return (
     <div className="app-shell-top">
       <nav className="navbar navbar-expand-xl app-navbar sticky-top">
@@ -69,39 +72,43 @@ function AppLayout() {
             </div>
           </Link>
 
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siaiNavbar" aria-controls="siaiNavbar" aria-expanded="false" aria-label="Abrir navegación">
-            <span className="navbar-toggler-icon"></span>
-          </button>
+          {session && navItems.length > 0 && (
+            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#siaiNavbar" aria-controls="siaiNavbar" aria-expanded="false" aria-label="Abrir navegación">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+          )}
 
-          <div className="collapse navbar-collapse" id="siaiNavbar">
-            <ul className="navbar-nav me-auto mb-2 mb-xl-0 mt-2 mt-xl-0">
-              {NAV_ITEMS.filter((item) => !item.requiresRole || hasManagementAccess).map((item) => (
-                <li className="nav-item" key={item.to}>
-                  <NavLink to={item.to} end={item.end} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                    <i className={`bi ${item.icon} me-1`}></i>
-                    <span>{item.label}</span>
-                    {item.badge && <span className="badge text-bg-danger ms-1">{item.badge}</span>}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-            <div className="d-flex align-items-center gap-2 py-2 py-xl-0">
-              <span className="top-status d-none d-md-inline-flex">
-                <span className="status-dot bg-success"></span>
-                Operativo
-              </span>
-              {authChecked && (
-                session ? (
-                  <button className="btn btn-outline-light btn-sm" type="button" onClick={handleLogout} disabled={loggingOut}>
-                    <i className="bi bi-box-arrow-right me-1"></i>
-                    {loggingOut ? 'Saliendo...' : 'Salir'}
-                  </button>
-                ) : (
-                  <Link className="btn btn-primary btn-sm" to="/login">
-                    <i className="bi bi-box-arrow-in-right me-1"></i>
-                    Ingresar
-                  </Link>
-                )
+          <div className={session ? 'collapse navbar-collapse' : 'navbar-collapse'} id="siaiNavbar">
+            {session && (
+              <ul className="navbar-nav me-auto mb-2 mb-xl-0 mt-2 mt-xl-0">
+                {navItems.map((item) => (
+                  <li className="nav-item" key={item.to}>
+                    <NavLink to={item.to} end={item.end} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                      <i className={`bi ${item.icon} me-1`}></i>
+                      <span>{item.label}</span>
+                      {item.badge && <span className="badge text-bg-danger ms-1">{item.badge}</span>}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="d-flex align-items-center gap-2 py-2 py-xl-0 ms-auto">
+              {session && (
+                <span className="top-status d-none d-md-inline-flex">
+                  <span className="status-dot bg-success"></span>
+                  Operativo
+                </span>
+              )}
+              {session ? (
+                <button className="btn btn-outline-light btn-sm" type="button" onClick={handleLogout} disabled={loggingOut}>
+                  <i className="bi bi-box-arrow-right me-1"></i>
+                  {loggingOut ? 'Saliendo...' : 'Salir'}
+                </button>
+              ) : (
+                <Link className="btn btn-primary btn-sm" to="/login">
+                  <i className="bi bi-box-arrow-in-right me-1"></i>
+                  Login
+                </Link>
               )}
             </div>
           </div>
