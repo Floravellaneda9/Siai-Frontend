@@ -1,315 +1,429 @@
+# SIAI Tucumán 🌧️
 
-# 🌊 SIAI Tucumán
+### Sistema Integral de Alerta Temprana de Inundaciones
 
-## Sistema de Información y Alertas de Inundaciones
-
-SIAI Tucumán es una aplicación web desarrollada para centralizar información relacionada con el **riesgo de inundaciones en la provincia de Tucumán**.
-
-El sistema permite visualizar información sobre estaciones de monitoreo, niveles de agua, precipitaciones, zonas de riesgo y alertas, con el objetivo de facilitar el acceso a información para la prevención y respuesta ante posibles inundaciones.
-
----
-
-## 🛠️ Tecnologías utilizadas
-
-* **React**
-* **Vite**
-* **React Bootstrap**
-* **Bootstrap**
-* **React Router DOM**
-* **JavaScript**
-* **HTML5**
-* **CSS3**
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react\&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite\&logoColor=white)](https://vite.dev/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap\&logoColor=white)](https://getbootstrap.com/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript\&logoColor=black)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?logo=vercel\&logoColor=white)](https://vercel.com/)
 
 ---
 
-# 🚀 Instalación del proyecto
+## Descripción del proyecto
 
-## 1. Crear el proyecto con React + Vite
+**SIAI Tucumán** es un proyecto web orientado al monitoreo y la prevención de situaciones de riesgo hídrico en la provincia de Tucumán.
 
-Abrir una terminal y ejecutar:
+La propuesta busca centralizar información relacionada con estaciones de monitoreo, niveles de agua, precipitaciones, alertas y zonas de riesgo, presentándola mediante una interfaz clara y organizada.
 
-```bash
-npm create vite@latest siai-frontend
-```
+Este repositorio corresponde al **Frontend del proyecto**, desarrollado con **React y Vite**.
 
-Vite solicitará algunas opciones.
-
-Seleccionar:
-
-```text
-Project name: siai-frontend
-Framework: React
-Variant: JavaScript
-```
-
-Luego ingresar a la carpeta:
-
-```bash
-cd siai-frontend
-```
+La versión actual representa la migración de la interfaz desarrollada anteriormente con HTML, CSS, JavaScript y Bootstrap hacia una estructura basada en componentes de React.
 
 ---
 
-## 2. Instalar las dependencias
+##  Objetivo
 
-Instalar React y React DOM:
+El objetivo de SIAI Tucumán es proporcionar una interfaz que permita visualizar información relacionada con posibles situaciones de riesgo de inundaciones y facilitar el acceso a los diferentes módulos del sistema.
 
-```bash
-npm install react react-dom
-```
-
-Instalar React Bootstrap:
-
-```bash
-npm install react-bootstrap bootstrap
-```
-
-Instalar React Router DOM:
-
-```bash
-npm install react-router-dom
-```
+El proyecto se encuentra planteado para trabajar posteriormente con información proveniente de estaciones, sensores y otras fuentes de datos.
 
 ---
 
-# 🎨 Configuración de Bootstrap
+##  Funcionalidades
 
-En el archivo:
+En esta etapa del frontend se implementaron las siguientes funcionalidades y elementos:
 
-```text
-src/main.jsx
-```
+###  Navegación
 
-importar Bootstrap:
+La aplicación cuenta con una barra de navegación responsive que permite acceder a los diferentes módulos previstos para el sistema:
+
+*  Mapa
+*  Alertas
+*  Estaciones
+*  Mediciones
+*  Historial
+*  Usuarios
+*  Reportes
+*  Configuración
+*  Login
+
+### Estado de zonas
+
+Se incorporó un conjunto de tarjetas para representar diferentes estados de las zonas monitoreadas:
+
+* **Zonas normales**
+* **Precaución**
+* **Riesgo**
+* **Emergencia**
+
+Cada tarjeta muestra una cantidad y una descripción asociada al estado.
+
+Actualmente estos valores son utilizados como datos de demostración de la interfaz.
+
+### Presentación del sistema
+
+La página incluye una sección informativa que explica:
+
+* Quiénes somos.
+* Qué hace SIAI Tucumán.
+* Cómo funciona la propuesta.
+* La importancia del monitoreo y las alertas tempranas.
+* La participación de la comunidad.
+
+### Diseño responsive
+
+La interfaz utiliza las clases responsive de Bootstrap para adaptar la distribución de los elementos a diferentes tamaños de pantalla.
+
+###  Pie de página
+
+Se incorporó un footer con:
+
+* Identidad del proyecto.
+* Año.
+* Información de contacto.
+
+---
+
+##  Componentización con React
+
+La interfaz fue dividida en componentes reutilizables para organizar mejor el código.
+
+Actualmente se encuentran los siguientes componentes:
+
+| Componente         | Función                                |
+| ------------------ | -------------------------------------- |
+| `Navbar.jsx`       | Barra de navegación principal          |
+| `Cards.jsx`        | Tarjetas de estados de las zonas       |
+| `Presentacion.jsx` | Información y presentación del sistema |
+| `Footer.jsx`       | Pie de página                          |
+
+El componente principal `App.jsx` se encarga de integrar estos componentes:
 
 ```jsx
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+function App() {
+  return (
+    <>
+      <Navbar />
+      <Cards />
+      <Presentacion />
+      <Footer />
+    </>
+  )
+}
 ```
 
-También se pueden instalar los iconos de Bootstrap con:
-
-```bash
-npm install bootstrap-icons
-```
+Esta organización permite mantener cada parte de la interfaz separada y facilita futuras modificaciones.
 
 ---
 
-# ▶️ Ejecutar el proyecto
+## Tecnologías utilizadas
 
-Para iniciar el servidor de desarrollo:
+### React
+
+Utilizado para construir la interfaz mediante componentes reutilizables.
+
+### Vite
+
+Utilizado como herramienta de desarrollo y construcción del proyecto.
+
+### JavaScript
+
+Utilizado para la lógica de la aplicación y la creación de los componentes.
+
+### Bootstrap 5.3
+
+Utilizado para:
+
+* Diseño de la interfaz.
+* Sistema de filas y columnas.
+* Componentes visuales.
+* Clases utilitarias.
+* Diseño responsive.
+
+### Bootstrap Icons
+
+Utilizado para incorporar iconos en la navegación, las tarjetas informativas y otros elementos de la interfaz.
+
+### ESLint
+
+Utilizado para detectar problemas y mantener buenas prácticas en el código JavaScript.
+
+### Git y GitHub
+
+Utilizados para el control de versiones y almacenamiento del código fuente.
+
+### Vercel
+
+Utilizado para realizar el despliegue del frontend.
+
+---
+
+##  Uso de Flexbox
+
+Se utiliza Flexbox principalmente mediante las clases proporcionadas por Bootstrap.
+
+Algunos ejemplos utilizados en los componentes son:
+
+```html
+d-flex align-items-center
+```
+
+y:
+
+```html
+d-flex align-items-center justify-content-between
+```
+
+También se utilizan clases responsive como:
+
+```html
+d-md-flex
+```
+
+Estas clases permiten organizar y alinear elementos dentro de diferentes componentes, principalmente en la navegación y el footer.
+
+---
+
+##  Uso de Grid
+
+Se utiliza el sistema **Grid de Bootstrap** para distribuir los elementos de la interfaz.
+
+Por ejemplo, en las tarjetas de estados se utiliza:
+
+```jsx
+<div className="row g-4">
+  <div className="col-md-6 col-xl-3">
+    ...
+  </div>
+</div>
+```
+
+Esto permite que:
+
+* En pantallas pequeñas se distribuyan los elementos en una columna.
+* En pantallas medianas se muestren dos columnas.
+* En pantallas grandes se puedan mostrar cuatro columnas.
+
+También se utiliza este sistema en la sección de presentación y en el footer.
+
+> En este proyecto se utiliza el sistema Grid proporcionado por Bootstrap.
+
+---
+
+## Estilos
+
+En esta etapa se utilizan principalmente las clases y componentes proporcionados por **Bootstrap 5.3** para definir la apariencia de la aplicación.
+
+También se encuentran disponibles los archivos:
+
+```text
+src/
+├── App.css
+└── index.css
+```
+
+que permiten incorporar estilos personalizados a medida que avance el desarrollo.
+
+Actualmente la mayor parte de la presentación visual se realiza mediante las clases de Bootstrap.
+
+---
+
+##  Responsive Design
+
+El diseño responsive se implementó utilizando las clases responsive de Bootstrap.
+
+Por ejemplo:
+
+```html
+col-md-6 col-xl-3
+```
+
+permite modificar la distribución de los componentes dependiendo del tamaño de pantalla.
+
+También se utilizan clases como:
+
+```html
+text-center
+text-md-start
+text-md-end
+justify-content-md-start
+```
+
+para adaptar la alineación de los elementos.
+
+Además, el proyecto incluye la etiqueta:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+
+que permite que la aplicación se adapte correctamente al ancho de los dispositivos.
+
+---
+
+##  SEO y estructura HTML
+
+Se incorporaron algunas prácticas básicas relacionadas con la estructura y accesibilidad del sitio.
+
+Entre ellas:
+
+* Uso del atributo `lang` en el documento HTML.
+* Etiqueta `meta charset="UTF-8"`.
+* Etiqueta `viewport`.
+* Uso de títulos y encabezados para organizar el contenido.
+* Uso del atributo `alt` en las imágenes.
+* Uso de atributos `aria-label` en elementos donde resulta necesario.
+
+En futuras etapas se continuará trabajando en la optimización de la estructura y el contenido del sitio.
+
+---
+
+## Estructura del proyecto
+
+```text
+SIAI-Frontend/
+│
+├── public/
+│   ├── favicon.svg
+│   └── icons.svg
+│
+├── src/
+│   ├── assets/
+│   │   ├── hero.png
+│   │   ├── react.svg
+│   │   └── vite.svg
+│   │
+│   ├── components/
+│   │   ├── Navbar.jsx
+│   │   ├── Cards.jsx
+│   │   ├── Presentacion.jsx
+│   │   └── Footer.jsx
+│   │
+│   ├── App.jsx
+│   ├── App.css
+│   ├── index.css
+│   └── main.jsx
+│
+├── index.html
+├── package.json
+├── package-lock.json
+├── eslint.config.js
+└── README.md
+```
+
+### `src/main.jsx`
+
+Es el punto de entrada de la aplicación React. También se encarga de importar Bootstrap, Bootstrap Icons y los estilos generales.
+
+### `src/App.jsx`
+
+Es el componente principal que integra los diferentes componentes de la aplicación.
+
+### `src/components/`
+
+Contiene los componentes reutilizables que forman la interfaz.
+
+### `src/assets/`
+
+Contiene recursos utilizados por la aplicación.
+
+### `public/`
+
+Contiene archivos públicos utilizados por el proyecto.
+
+---
+
+##  Requisitos
+
+Para ejecutar el proyecto localmente se necesita tener instalado:
+
+* **Node.js**
+* **npm**
+
+Se recomienda utilizar una versión actual de Node.js compatible con Vite.
+
+---
+
+##  Instalación y ejecución
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/Floravellaneda9/Siai-Frontend.git
+```
+
+### 2. Ingresar al proyecto
+
+```bash
+cd Siai-Frontend
+```
+
+### 3. Instalar las dependencias
+
+```bash
+npm install
+```
+
+### 4. Ejecutar el servidor de desarrollo
 
 ```bash
 npm run dev
 ```
 
-Vite mostrará una dirección similar a:
+Luego de ejecutar el comando, Vite mostrará en la terminal la dirección local para acceder a la aplicación.
 
-```text
-http://localhost:5173/
+---
+
+##  Scripts disponibles
+
+### Ejecutar el proyecto en desarrollo
+
+```bash
+npm run dev
 ```
 
-Abrir esa dirección en el navegador.
-
----
-
-# 📁 Estructura del proyecto
-
-Una estructura recomendada para SIAI es:
-
-```text
-siai-frontend/
-│
-├── public/
-│   └── img/
-│
-├── src/
-│   │
-│   ├── assets/
-│   │
-│   ├── components/
-│   │   ├── Navbar.jsx
-│   │   ├── Footer.jsx
-│   │   ├── Card.jsx
-│   │   └── AlertCard.jsx
-│   │
-│   ├── pages/
-│   │   ├── Home.jsx
-│   │   ├── Login.jsx
-│   │   ├── Mapa.jsx
-│   │   ├── Alertas.jsx
-│   │   ├── Estaciones.jsx
-│   │   ├── Mediciones.jsx
-│   │   ├── Historial.jsx
-│   │   ├── Usuarios.jsx
-│   │   ├── Reportes.jsx
-│   │   └── Configuracion.jsx
-│   │
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-│
-├── package.json
-├── vite.config.js
-└── README.md
-```
-
----
-
-# 🧭 React Router DOM
-
-React Router DOM permite crear diferentes páginas dentro de la aplicación sin tener que crear un archivo HTML para cada sección.
-
-En `App.jsx` se pueden definir las rutas:
-
-
-# 🎨 React Bootstrap
-
-React Bootstrap permite utilizar los componentes de Bootstrap directamente dentro de React.
-
-Ejemplo de un botón:
-
-```jsx
-import Button from 'react-bootstrap/Button';
-
-function Ejemplo() {
-  return (
-    <Button variant="primary">
-      Ver información
-    </Button>
-  );
-}
-
-export default Ejemplo;
-```
-
-Ejemplo de una tarjeta:
-
-```jsx
-import Card from 'react-bootstrap/Card';
-
-function Tarjeta() {
-  return (
-    <Card>
-      <Card.Body>
-        <Card.Title>Nivel del agua</Card.Title>
-
-        <Card.Text>
-          Información actual de la estación.
-        </Card.Text>
-      </Card.Body>
-    </Card>
-  );
-}
-
-export default Tarjeta;
-```
-
----
-
-# 🌊 Funcionalidades principales
-
-SIAI Tucumán está pensado para incorporar las siguientes funcionalidades:
-
-### 🗺️ Mapa de riesgo
-
-Visualización de las diferentes zonas de riesgo de inundación.
-
-### 🚨 Alertas
-
-Visualización de alertas y avisos relacionados con posibles inundaciones.
-
-### 📡 Estaciones
-
-Información de las estaciones de monitoreo instaladas en diferentes puntos.
-
-### 📊 Mediciones
-
-Visualización de datos obtenidos de sensores y estaciones.
-
-### 📋 Historial
-
-Consulta de mediciones y alertas anteriores.
-
-### 👥 Usuarios
-
-Administración de los usuarios del sistema.
-
-### 📑 Reportes
-
-Generación y consulta de información relacionada con las mediciones y alertas.
-
-### ⚙️ Configuración
-
-Configuración general del sistema.
-
----
-
-# 📦 Comandos principales
-
-| Comando           | Función                               |
-| ----------------- | ------------------------------------- |
-| `npm install`     | Instala las dependencias              |
-| `npm run dev`     | Ejecuta el servidor de desarrollo     |
-| `npm run build`   | Genera la versión de producción       |
-| `npm run preview` | Previsualiza la versión de producción |
-
----
-
-# 🏗️ Generar versión de producción
-
-Para generar los archivos optimizados para publicar el proyecto:
+### Generar la versión de producción
 
 ```bash
 npm run build
 ```
 
-Se generará la carpeta:
-
-```text
-dist/
-```
-
-Esta carpeta contiene la versión lista para desplegar.
-
----
-
-# 🌐 Publicación
-
-El proyecto puede desplegarse en plataformas como:
-
-* Netlify
-* Vercel
-* GitHub Pages
-
-Para un proyecto realizado con Vite, el comando de compilación es:
+### Ejecutar ESLint
 
 ```bash
-npm run build
+npm run lint
 ```
 
-Y la carpeta de publicación es:
+### Previsualizar la versión de producción
 
-```text
-dist
+```bash
+npm run preview
 ```
 
 ---
 
-# 👨‍💻 Proyecto
+##  Deploy
 
-**SIAI Tucumán**
+El frontend se encuentra desplegado mediante **Vercel**.
 
-Sistema de Información y Alertas de Inundaciones.
+**Aplicación:**
+https://siai-frontend-lime.vercel.app/
 
-Proyecto académico desarrollado con **React + Vite**.
+**Repositorio:**
+https://github.com/Floravellaneda9/Siai-Frontend
 
 ---
 
-## 📌 Estado del proyecto
+## Integrantes
 
-🚧 **En desarrollo**
+* **Ivan Diez Gomez**
+* **Luciana Jimenez**
+* **Florencia Avellaneda**
 
-Actualmente se encuentra en desarrollo la interfaz frontend y la integración de los diferentes módulos del sistema.
+---
+
+
+
 
 

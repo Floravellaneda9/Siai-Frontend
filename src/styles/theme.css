@@ -1,0 +1,184 @@
+:root {
+  --siai-font-sans: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+
+  --siai-bg: #f4f7fb;
+  --siai-bg-subtle: #eef3f9;
+  --siai-surface: #ffffff;
+  --siai-surface-alt: #f8fafc;
+  --siai-border: #e2e8f0;
+  --siai-border-strong: #cbd5e1;
+
+  --siai-text: #0f172a;
+  --siai-text-muted: #64748b;
+  --siai-text-soft: #94a3b8;
+
+  --siai-primary: #0b5ed7;
+  --siai-primary-600: #0a58ca;
+  --siai-primary-700: #084298;
+  --siai-primary-soft: #e7f1ff;
+
+  --siai-accent: #0f766e;
+  --siai-accent-soft: #ccfbf1;
+
+  --siai-success: #198754;
+  --siai-success-soft: #e8f7ef;
+  --siai-warning: #f59e0b;
+  --siai-warning-soft: #fff7e6;
+  --siai-danger: #dc3545;
+  --siai-danger-soft: #fdecec;
+  --siai-info: #0ea5e9;
+  --siai-info-soft: #e6f6fe;
+  --siai-critical: #991b1b;
+  --siai-critical-soft: #fee2e2;
+  --siai-neutral: #475569;
+  --siai-neutral-soft: #f1f5f9;
+
+  --siai-radius-sm: 0.5rem;
+  --siai-radius-md: 0.75rem;
+  --siai-radius-lg: 1rem;
+  --siai-radius-xl: 1.25rem;
+
+  --siai-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --siai-shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --siai-shadow-lg: 0 14px 32px rgba(15, 23, 42, 0.12);
+
+  --siai-sidebar-width: 260px;
+  --siai-sidebar-collapsed: 76px;
+  --siai-topbar-height: 64px;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--siai-font-sans);
+  color: var(--siai-text);
+  background: var(--siai-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100%;
+}
+
+a {
+  color: var(--siai-primary);
+}
+
+.text-muted, .text-secondary {
+  color: var(--siai-text-muted) !important;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Bootstrap refinements */
+.card {
+  border: 1px solid var(--siai-border);
+  border-radius: var(--siai-radius-lg);
+  box-shadow: var(--siai-shadow-sm);
+}
+
+.card-header {
+  background: var(--siai-surface);
+  border-bottom: 1px solid var(--siai-border);
+  padding: 0.9rem 1.1rem;
+}
+
+.table {
+  --bs-table-bg: transparent;
+  margin-bottom: 0;
+}
+
+.table thead th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--siai-text-muted);
+  font-weight: 600;
+  background: var(--siai-surface-alt);
+  border-bottom: 1px solid var(--siai-border);
+  white-space: nowrap;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.85rem 1rem;
+  border-bottom-color: var(--siai-border);
+  vertical-align: middle;
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--siai-text);
+  margin-bottom: 0.35rem;
+}
+
+.form-control, .form-select {
+  border-color: var(--siai-border-strong);
+  border-radius: 0.6rem;
+  padding: 0.6rem 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 0.2rem rgba(11, 94, 215, 0.12);
+}
+
+.input-group-text {
+  background: var(--siai-surface-alt);
+  border-color: var(--siai-border-strong);
+  color: var(--siai-text-muted);
+}
+
+.btn {
+  border-radius: 0.6rem;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: var(--siai-primary);
+  border-color: var(--siai-primary);
+}
+
+.btn-primary:hover {
+  background: var(--siai-primary-600);
+  border-color: var(--siai-primary-600);
+}
+
+.badge {
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.4em 0.65em;
+}
+
+.list-group-item {
+  border-color: var(--siai-border);
+}
+
+/* App-level helpers */
+.surface {
+  background: var(--siai-surface);
+  border: 1px solid var(--siai-border);
+  border-radius: var(--siai-radius-lg);
+  box-shadow: var(--siai-shadow-sm);
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.sev-normal { --sev-color: var(--siai-success); --sev-soft: var(--siai-success-soft); }
+.sev-warning { --sev-color: var(--siai-warning); --sev-soft: var(--siai-warning-soft); }
+.sev-danger { --sev-color: var(--siai-danger); --sev-soft: var(--siai-danger-soft); }
+.sev-critical { --sev-color: #212529; --sev-soft: #e9ecef; }
+.sev-info { --sev-color: var(--siai-info); --sev-soft: var(--siai-info-soft); }
+
+.swal-sin-borde { border: none !important; }
