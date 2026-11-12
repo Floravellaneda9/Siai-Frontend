@@ -84,31 +84,35 @@ function Mapa() {
     <div>
       <PageHeader
         icon="bi-map"
+        eyebrow="Geolocalización"
         title="Mapa de monitoreo"
-        subtitle="Visualización geográfica de estaciones hidrológicas y zonas de riesgo en Tucumán."
+        subtitle="Visualización geográfica de estaciones hidrológicas y condiciones de riesgo en la provincia de Tucumán."
       />
-      <div className="row g-3">
-        <div className="col-lg-8">
+      <div className="row g-3 g-lg-4">
+        <div className="col-xl-8">
           <div className="card h-100">
-            <div className="card-header d-flex justify-content-between align-items-center">
-              <strong><i className="bi bi-geo-alt me-1"></i>Mapa de estaciones</strong>
-              <span className="badge text-bg-success"><i className="bi bi-circle-fill me-1"></i>Sistema activo</span>
+            <div className="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <div>
+                <h2 className="h6 fw-bold mb-0 d-flex align-items-center gap-2"><i className="bi bi-geo-alt text-primary"></i>Red de estaciones</h2>
+                <div className="text-secondary small mt-1">{estacionesVisibles.length} de {estaciones.length} estaciones visibles</div>
+              </div>
+              <span className="badge text-bg-success"><span className="status-dot bg-white me-1" style={{width:6,height:6,boxShadow:'none'}}></span>Sistema activo</span>
             </div>
             <div className="card-body p-0">
-              <div className="d-flex flex-wrap align-items-center gap-2 p-3 border-bottom" aria-label="Filtrar estaciones por estado">
-                <span className="small fw-semibold me-1">Mostrar:</span>
+              <div className="d-flex flex-wrap align-items-center gap-2 p-3 border-bottom" style={{ background: 'var(--siai-surface-alt)' }} aria-label="Filtrar estaciones por estado">
+                <span className="small fw-semibold text-secondary me-1">Capas visibles:</span>
                 {estados.map((estado) => {
-                  const colorEstado = { Normal: '#198754', 'Precaución': '#ffc107', Riesgo: '#dc3545', Emergencia: '#212529' }[estado]
+                  const colorEstado = { Normal: '#16a34a', 'Precaución': '#d97706', Riesgo: '#dc2626', Emergencia: '#111827' }[estado]
                   const activo = estadosVisibles.includes(estado)
                   return (
                     <button
                       key={estado}
-                      className={`btn btn-sm ${activo ? 'btn-outline-secondary' : 'btn-outline-light text-secondary border'}`}
+                      className={`btn btn-sm ${activo ? 'btn-outline-secondary bg-white' : 'btn-light border'}`}
                       type="button"
                       aria-pressed={activo}
                       onClick={() => alternarEstado(estado)}
                     >
-                      <i className="bi bi-circle-fill me-1" style={{ color: colorEstado }}></i>
+                      <i className="bi bi-circle-fill me-1" style={{ color: colorEstado, fontSize: '0.55rem', verticalAlign: 'middle' }}></i>
                       {estado}
                     </button>
                   )
@@ -118,7 +122,7 @@ function Mapa() {
                 center={[-26.95, -65.36]}
                 zoom={8}
                 scrollWheelZoom
-                style={{ height: 'min(60vh, 520px)', minHeight: '360px', width: '100%' }}
+                style={{ height: 'min(62vh, 560px)', minHeight: '380px', width: '100%' }}
                 aria-label="Mapa interactivo de estaciones hidrológicas de Tucumán"
               >
                 <TileLayer
@@ -142,48 +146,48 @@ function Mapa() {
                   </CircleMarker>
                 ))}
               </MapContainer>
-              <div className="px-3 py-2 small text-secondary border-top">
-                {estacionesVisibles.length} de {estaciones.length} estaciones visibles
-              </div>
             </div>
-            <div className="card-footer">
-              <strong className="me-3"><i className="bi bi-info-circle me-1"></i>Referencias:</strong>
-              <span className="badge text-bg-success me-2">Normal</span>
-              <span className="badge text-bg-warning me-2">Precaución</span>
-              <span className="badge text-bg-danger me-2">Riesgo</span>
+            <div className="card-footer d-flex flex-wrap align-items-center gap-2">
+              <span className="small fw-semibold text-secondary me-1"><i className="bi bi-info-circle me-1"></i>Referencias:</span>
+              <span className="badge text-bg-success">Normal</span>
+              <span className="badge text-bg-warning">Precaución</span>
+              <span className="badge text-bg-danger">Riesgo</span>
               <span className="badge text-bg-dark">Emergencia</span>
             </div>
           </div>
         </div>
 
-        <div className="col-lg-4">
+        <div className="col-xl-4">
           <div className="card h-100">
-            <div className="card-header"><strong><i className="bi bi-layers me-1"></i>Resumen por zona</strong></div>
+            <div className="card-header">
+              <h2 className="h6 fw-bold mb-0 d-flex align-items-center gap-2"><i className="bi bi-layers text-primary"></i>Resumen por condición</h2>
+              <div className="text-secondary small mt-1">Seleccioná una categoría para ver detalle</div>
+            </div>
             <div className="card-body">
               <div className="d-flex flex-column gap-2">
                 {ZONAS.map((zona) => (
                   <div
                     key={zona.estado}
-                    className={`border rounded-3 p-3 ${zona.borde}`}
+                    className={`border rounded-4 p-3 ${zona.borde}`}
                     role="button"
                     tabIndex={0}
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: 'pointer', transition: 'transform .15s ease, box-shadow .15s ease', background: 'var(--siai-surface)' }}
                     onClick={() => verZona(zona)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault()
-                        verZona(zona)
-                      }
-                    }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); verZona(zona) } }}
                   >
                     <div className="d-flex justify-content-between align-items-center">
-                      <div>
-                        <div className="fw-semibold"><i className={`bi ${zona.icono} me-1`}></i>{zona.titulo}</div>
-                        <div className="text-secondary small">{zona.estado}</div>
+                      <div className="d-flex align-items-center gap-3">
+                        <div className={`rounded-3 d-inline-flex align-items-center justify-content-center bg-${zona.badge}-subtle text-${zona.badge}`} style={{ width: 40, height: 40 }}>
+                          <i className={`bi ${zona.icono}`}></i>
+                        </div>
+                        <div>
+                          <div className="fw-semibold">{zona.titulo}</div>
+                          <div className="text-secondary small">{zona.estado}</div>
+                        </div>
                       </div>
                       <div className="text-end">
-                        <div className="fs-4 fw-bold">{zona.cantidad}</div>
-                        <span className={`badge text-bg-${zona.badge}`}>zonas</span>
+                        <div className="fs-4 fw-bold lh-1">{zona.cantidad}</div>
+                        <span className="text-secondary small">zonas</span>
                       </div>
                     </div>
                   </div>

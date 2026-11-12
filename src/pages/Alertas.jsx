@@ -4,6 +4,8 @@ import Swal from 'sweetalert2'
 import { emergencia } from '../components/alertas.jsx'
 import PageHeader from '../components/layout/PageHeader.jsx'
 import SectionCard from '../components/ui/SectionCard.jsx'
+import StatCard from '../components/ui/StatCard.jsx'
+import StatusBadge from '../components/ui/StatusBadge.jsx'
 import { escaparHtml as escapar } from '../utils/html.js'
 
 const ALERTAS = [
@@ -92,28 +94,35 @@ function Alertas() {
 
   return (
     <div>
-      <PageHeader icon="bi-exclamation-triangle" title="Centro de alertas" subtitle="Monitoreo y gestión de alertas activas emitidas por la red de estaciones." actions={<Link className="btn btn-primary" to="/agregar-alerta"><i className="bi bi-plus-lg me-1"></i>Nueva alerta</Link>} />
+      <PageHeader icon="bi-exclamation-triangle" eyebrow="Operación" title="Centro de alertas" subtitle="Supervisión, priorización y gestión de alertas activas emitidas por la red de monitoreo." actions={<Link className="btn btn-primary" to="/agregar-alerta"><i className="bi bi-plus-lg me-1"></i>Nueva alerta</Link>} />
 
-      <div className="row g-3 mb-3">
-        <div className="col-sm-3"><div className="card border-dark-subtle"><div className="card-body py-3"><div className="text-secondary small">Alertas negras</div><div className="fs-3 fw-bold">{conteo.NEGRA}</div></div></div></div>
-        <div className="col-sm-3"><div className="card border-danger-subtle"><div className="card-body py-3"><div className="text-secondary small">Alertas rojas</div><div className="fs-3 fw-bold text-danger">{conteo.ROJA}</div></div></div></div>
-        <div className="col-sm-3"><div className="card border-warning-subtle"><div className="card-body py-3"><div className="text-secondary small">Alertas amarillas</div><div className="fs-3 fw-bold text-warning">{conteo.AMARILLA}</div></div></div></div>
-        <div className="col-sm-3"><div className="card"><div className="card-body py-3"><div className="text-secondary small">Total activas</div><div className="fs-3 fw-bold">{ALERTAS.length}</div></div></div></div>
+      <div className="row g-3 mb-4">
+        <div className="col-6 col-xl-3"><StatCard label="Alertas negras" value={conteo.NEGRA} icon="bi-shield-exclamation" tone="dark" meta="Emergencia crítica" /></div>
+        <div className="col-6 col-xl-3"><StatCard label="Alertas rojas" value={conteo.ROJA} icon="bi-exclamation-octagon" tone="danger" meta="Riesgo alto" /></div>
+        <div className="col-6 col-xl-3"><StatCard label="Alertas amarillas" value={conteo.AMARILLA} icon="bi-exclamation-triangle" tone="warning" meta="Precaución" /></div>
+        <div className="col-6 col-xl-3"><StatCard label="Total activas" value={ALERTAS.length} icon="bi-bell" tone="primary" meta="En seguimiento" /></div>
       </div>
 
-      <SectionCard title="Alertas activas" icon="bi-bell" actions={<div className="btn-group btn-group-sm" role="group" aria-label="Filtrar">{['TODAS','NEGRA','ROJA','AMARILLA'].map(n => <button key={n} className={`btn ${filtro===n?'btn-primary':'btn-outline-secondary'}`} onClick={() => setFiltro(n)}>{n==='TODAS'?'Todas':n}</button>)}</div>}>
+      <SectionCard
+        title="Alertas activas"
+        subtitle={`${filtradas.length} alertas visibles`}
+        icon="bi-bell"
+        actions={<div className="btn-group btn-group-sm" role="group" aria-label="Filtrar alertas">{['TODAS','NEGRA','ROJA','AMARILLA'].map(n => <button key={n} className={`btn ${filtro===n?'btn-primary':'btn-outline-secondary'}`} onClick={() => setFiltro(n)}>{n==='TODAS'?'Todas':n}</button>)}</div>}
+      >
         <div className="row g-3">
           {filtradas.map((alerta) => (
             <div className="col-xl-6" key={alerta.id}>
-              <div className={`card h-100 ${alerta.borde}`}>
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-start mb-2">
-                    <span className={`badge text-bg-${alerta.badge}`}><i className={`bi ${alerta.icono} me-1`}></i>ALERTA {alerta.nivel}</span>
-                    <span className="text-secondary small"><i className="bi bi-clock me-1"></i>{alerta.hora}</span>
+              <div className={`card h-100 ${alerta.borde} border-opacity-75`} style={{ borderLeftWidth: 4 }}>
+                <div className="card-body p-4">
+                  <div className="d-flex justify-content-between align-items-start mb-3">
+                    <div className="d-flex align-items-center gap-2 flex-wrap">
+                      <StatusBadge status={alerta.nivel} tone={alerta.badge}><i className={`bi ${alerta.icono} me-1`}></i>ALERTA {alerta.nivel}</StatusBadge>
+                      <span className="text-secondary small"><i className="bi bi-clock me-1"></i>{alerta.hora}</span>
+                    </div>
                   </div>
-                  <h5 className="card-title mb-1">{alerta.titulo}</h5>
-                  <p className="text-secondary mb-2">{alerta.descripcion} <strong className="text-dark">{alerta.dato}</strong>.</p>
-                  <div className="d-flex flex-wrap gap-3 small text-secondary mb-3">
+                  <h3 className="h5 fw-bold mb-2">{alerta.titulo}</h3>
+                  <p className="text-secondary mb-3">{alerta.descripcion} <strong style={{ color: 'var(--siai-text-strong)' }}>{alerta.dato}</strong>.</p>
+                  <div className="d-flex flex-wrap gap-3 small text-secondary mb-4 p-3 rounded-3" style={{ background: 'var(--siai-surface-alt)', border: '1px solid var(--siai-divider)' }}>
                     <span><i className="bi bi-broadcast me-1"></i>{alerta.estacion}</span>
                     <span><i className="bi bi-geo-alt me-1"></i>{alerta.ubicacion}</span>
                   </div>
@@ -122,7 +131,7 @@ function Alertas() {
               </div>
             </div>
           ))}
-          {filtradas.length === 0 && <div className="col-12 text-center text-secondary py-4">No hay alertas para el filtro seleccionado.</div>}
+          {filtradas.length === 0 && <div className="col-12 text-center text-secondary py-5">No hay alertas para el filtro seleccionado.</div>}
         </div>
       </SectionCard>
     </div>

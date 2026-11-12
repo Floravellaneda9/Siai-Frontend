@@ -62,10 +62,12 @@ function AppLayout() {
 
   return (
     <div className="app-shell-top">
-      <nav className="navbar navbar-expand-xl app-navbar sticky-top">
+      <nav className="navbar navbar-expand-xl app-navbar">
         <div className="container-fluid px-3 px-lg-4">
           <Link className="navbar-brand d-flex align-items-center gap-2" to="/">
-            <img src="/img/logogota..png" alt="SIAI" width="32" height="32" />
+            <span className="brand-mark">
+              <img src="/img/logogota..png" alt="SIAI" width="22" height="22" />
+            </span>
             <div className="d-flex flex-column lh-1">
               <span className="brand-title">SIAI Tucumán</span>
               <span className="brand-subtitle">Monitoreo hídrico</span>
@@ -84,7 +86,7 @@ function AppLayout() {
                 {navItems.map((item) => (
                   <li className="nav-item" key={item.to}>
                     <NavLink to={item.to} end={item.end} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                      <i className={`bi ${item.icon} me-1`}></i>
+                      <i className={`bi ${item.icon}`}></i>
                       <span>{item.label}</span>
                       {item.badge && <span className="badge text-bg-danger ms-1">{item.badge}</span>}
                     </NavLink>
@@ -92,22 +94,22 @@ function AppLayout() {
                 ))}
               </ul>
             )}
-            <div className="d-flex align-items-center gap-2 py-2 py-xl-0 ms-auto">
+            <div className="d-flex align-items-center gap-2 py-2 py-xl-0 ms-auto app-nav-meta">
               {session && (
                 <span className="top-status d-none d-md-inline-flex">
                   <span className="status-dot bg-success"></span>
-                  Operativo
+                  Sistema operativo
                 </span>
               )}
               {session ? (
                 <button className="btn btn-outline-light btn-sm" type="button" onClick={handleLogout} disabled={loggingOut}>
                   <i className="bi bi-box-arrow-right me-1"></i>
-                  {loggingOut ? 'Saliendo...' : 'Salir'}
+                  {loggingOut ? 'Saliendo...' : 'Cerrar sesión'}
                 </button>
               ) : (
                 <Link className="btn btn-primary btn-sm" to="/login">
                   <i className="bi bi-box-arrow-in-right me-1"></i>
-                  Login
+                  Iniciar sesión
                 </Link>
               )}
             </div>
@@ -125,7 +127,10 @@ function AppLayout() {
 
       <footer className="app-footer-top">
         <div className="container-fluid px-3 px-lg-4">
-          <span>&copy; 2026 SIAI Tucumán · Sistema de monitoreo y alerta temprana</span>
+          <div className="app-footer-inner">
+            <span>&copy; 2026 SIAI Tucumán · Sistema de monitoreo y alerta temprana</span>
+            <span className="d-none d-md-inline">Plataforma de gestión hídrica</span>
+          </div>
         </div>
       </footer>
     </div>

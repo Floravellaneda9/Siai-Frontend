@@ -3,6 +3,8 @@ import Swal from 'sweetalert2'
 import { advertencia, toast } from '../components/alertas.jsx'
 import PageHeader from '../components/layout/PageHeader.jsx'
 import SectionCard from '../components/ui/SectionCard.jsx'
+import StatCard from '../components/ui/StatCard.jsx'
+import StatusBadge from '../components/ui/StatusBadge.jsx'
 import { escaparHtml as escapar } from '../utils/html.js'
 
 const EMAIL_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -92,13 +94,13 @@ function Usuarios() {
 
   return (
     <div>
-      <PageHeader icon="bi-people" title="Usuarios y accesos" subtitle="Administración de cuentas, roles y permisos del sistema." actions={<button className="btn btn-primary" onClick={nuevoUsuario}><i className="bi bi-person-plus me-1"></i>Nuevo usuario</button>} />
-      <div className="row g-3 mb-3">
-        <div className="col-sm-4"><div className="card"><div className="card-body py-3"><div className="text-secondary small">Total</div><div className="fs-4 fw-bold">{usuarios.length}</div></div></div></div>
-        <div className="col-sm-4"><div className="card"><div className="card-body py-3"><div className="text-secondary small">Activos</div><div className="fs-4 fw-bold text-success">{activos}</div></div></div></div>
-        <div className="col-sm-4"><div className="card"><div className="card-body py-3"><div className="text-secondary small">Administradores</div><div className="fs-4 fw-bold text-primary">{usuarios.filter(u=>u.rol==='Administrador').length}</div></div></div></div>
+      <PageHeader icon="bi-people" eyebrow="Administración" title="Usuarios y accesos" subtitle="Gestión de cuentas, roles y permisos de acceso a la plataforma." actions={<button className="btn btn-primary" onClick={nuevoUsuario}><i className="bi bi-person-plus me-1"></i>Nuevo usuario</button>} />
+      <div className="row g-3 mb-4">
+        <div className="col-sm-4"><StatCard label="Usuarios totales" value={usuarios.length} icon="bi-people" tone="primary" meta="Cuentas registradas" /></div>
+        <div className="col-sm-4"><StatCard label="Activos" value={activos} icon="bi-person-check" tone="success" meta="Con acceso vigente" /></div>
+        <div className="col-sm-4"><StatCard label="Administradores" value={usuarios.filter(u=>u.rol==='Administrador').length} icon="bi-shield-lock" tone="info" meta="Control total del sistema" /></div>
       </div>
-      <SectionCard title="Listado de usuarios" icon="bi-table" actions={<div className="input-group input-group-sm" style={{maxWidth:280}}><span className="input-group-text"><i className="bi bi-search"></i></span><input className="form-control" placeholder="Buscar usuario..." value={busqueda} onChange={e=>setBusqueda(e.target.value)} /></div>} noBodyPadding>
+      <SectionCard title="Directorio de usuarios" subtitle={`${filtrados.length} usuarios visibles`} icon="bi-table" actions={<div className="input-group input-group-sm" style={{minWidth:260}}><span className="input-group-text"><i className="bi bi-search"></i></span><input className="form-control" placeholder="Buscar por nombre, email o rol..." value={busqueda} onChange={e=>setBusqueda(e.target.value)} /></div>} noBodyPadding>
         <div className="table-responsive">
           <table className="table table-hover align-middle mb-0">
             <thead><tr><th>Usuario</th><th>Email</th><th>Rol</th><th>Estado</th><th>Último acceso</th><th className="text-end">Acciones</th></tr></thead>
@@ -106,22 +108,22 @@ function Usuarios() {
               {filtrados.map((usuario) => (
                 <tr key={usuario.id}>
                   <td>
-                    <div className="d-flex align-items-center gap-2">
-                      <div className="rounded-circle bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center fw-semibold" style={{width:34,height:34}}>{usuario.nombre.charAt(0)}</div>
-                      <span className="fw-medium">{usuario.nombre}</span>
+                    <div className="d-flex align-items-center gap-3">
+                      <div className="rounded-circle bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center fw-bold flex-shrink-0" style={{width:36,height:36}}>{usuario.nombre.charAt(0)}</div>
+                      <span className="fw-semibold">{usuario.nombre}</span>
                     </div>
                   </td>
                   <td className="text-secondary">{usuario.email}</td>
-                  <td><span className={`badge text-bg-${usuario.rolBadgeColor}`}>{usuario.rol}</span></td>
-                  <td><span className={`badge text-bg-${usuario.estadoBadgeColor}`}>{usuario.estado}</span></td>
+                  <td><StatusBadge status={usuario.rol} tone={usuario.rolBadgeColor} /></td>
+                  <td><StatusBadge status={usuario.estado} tone={usuario.estadoBadgeColor} dot /></td>
                   <td className="text-secondary small">{usuario.ultimoAcceso}</td>
                   <td className="text-end">
-                    <button className="btn btn-sm btn-outline-primary me-1" onClick={() => editarUsuario(usuario)} aria-label={`Editar a ${usuario.nombre}`}><i className="bi bi-pencil"></i></button>
+                    <button className="btn btn-sm btn-outline-secondary me-1" onClick={() => editarUsuario(usuario)} aria-label={`Editar a ${usuario.nombre}`}><i className="bi bi-pencil"></i></button>
                     <button className="btn btn-sm btn-outline-danger" onClick={() => eliminarUsuario(usuario)} aria-label={`Eliminar a ${usuario.nombre}`}><i className="bi bi-trash"></i></button>
                   </td>
                 </tr>
               ))}
-              {filtrados.length === 0 && <tr><td colSpan="6" className="text-center text-secondary py-4">No se encontraron usuarios.</td></tr>}
+              {filtrados.length === 0 && <tr><td colSpan="6" className="text-center text-secondary py-5">No se encontraron usuarios.</td></tr>}
             </tbody>
           </table>
         </div>

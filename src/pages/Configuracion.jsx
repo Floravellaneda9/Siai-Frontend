@@ -48,45 +48,47 @@ function Configuracion() {
 
   return (
     <div>
-      <PageHeader icon="bi-gear" title="Configuración" subtitle="Parámetros operativos, umbrales de alerta y preferencias de notificación." />
+      <PageHeader icon="bi-gear" eyebrow="Sistema" title="Configuración" subtitle="Parámetros operativos, umbrales de alerta y preferencias de comunicación del sistema." />
       <div className="row g-4">
         <div className="col-lg-6">
-          <SectionCard title="Umbrales hidrométricos" icon="bi-speedometer" subtitle="Definí los niveles que disparan cada estado de alerta.">
-            <div className="mb-3 p-3 rounded-3 border-start border-4 border-warning bg-warning-subtle">
-              <label className="form-label fw-semibold mb-1" htmlFor="umbral-precaucion"><i className="bi bi-exclamation-circle me-1"></i>Nivel de precaución</label>
-              <div className="input-group"><input id="umbral-precaucion" type="number" className="form-control" step="0.01" min="0" value={umbrales.precaucion} onChange={cambiarUmbral('precaucion')} /><span className="input-group-text">m</span></div>
+          <SectionCard title="Umbrales hidrométricos" icon="bi-speedometer2" subtitle="Definí los niveles que activan cada estado de alerta.">
+            <div className="mb-3 p-3 rounded-4 border border-warning-subtle bg-warning-subtle bg-opacity-25">
+              <label className="form-label fw-semibold mb-2" htmlFor="umbral-precaucion"><span className="badge text-bg-warning me-2">Precaución</span>Nivel de alerta temprana</label>
+              <div className="input-group"><input id="umbral-precaucion" type="number" className="form-control" step="0.01" min="0" value={umbrales.precaucion} onChange={cambiarUmbral('precaucion')} /><span className="input-group-text">metros</span></div>
             </div>
-            <div className="mb-3 p-3 rounded-3 border-start border-4 border-danger bg-danger-subtle">
-              <label className="form-label fw-semibold mb-1" htmlFor="umbral-riesgo"><i className="bi bi-exclamation-triangle me-1"></i>Nivel de riesgo</label>
-              <div className="input-group"><input id="umbral-riesgo" type="number" className="form-control" step="0.01" min="0" value={umbrales.riesgo} onChange={cambiarUmbral('riesgo')} /><span className="input-group-text">m</span></div>
+            <div className="mb-3 p-3 rounded-4 border border-danger-subtle bg-danger-subtle bg-opacity-25">
+              <label className="form-label fw-semibold mb-2" htmlFor="umbral-riesgo"><span className="badge text-bg-danger me-2">Riesgo</span>Nivel de riesgo operativo</label>
+              <div className="input-group"><input id="umbral-riesgo" type="number" className="form-control" step="0.01" min="0" value={umbrales.riesgo} onChange={cambiarUmbral('riesgo')} /><span className="input-group-text">metros</span></div>
             </div>
-            <div className="mb-4 p-3 rounded-3 border-start border-4 border-dark bg-light">
-              <label className="form-label fw-semibold mb-1" htmlFor="umbral-critico"><i className="bi bi-exclamation-octagon me-1"></i>Nivel crítico</label>
-              <div className="input-group"><input id="umbral-critico" type="number" className="form-control" step="0.01" min="0" value={umbrales.critico} onChange={cambiarUmbral('critico')} /><span className="input-group-text">m</span></div>
+            <div className="mb-4 p-3 rounded-4 border border-dark-subtle bg-light">
+              <label className="form-label fw-semibold mb-2" htmlFor="umbral-critico"><span className="badge text-bg-dark me-2">Crítico</span>Nivel de emergencia</label>
+              <div className="input-group"><input id="umbral-critico" type="number" className="form-control" step="0.01" min="0" value={umbrales.critico} onChange={cambiarUmbral('critico')} /><span className="input-group-text">metros</span></div>
             </div>
-            <button className="btn btn-primary" onClick={guardarUmbrales} disabled={guardando}><i className="bi bi-save me-1"></i>Guardar cambios</button>
+            <button className="btn btn-primary" onClick={guardarUmbrales} disabled={guardando}><i className="bi bi-save me-1"></i>{guardando ? 'Guardando...' : 'Guardar umbrales'}</button>
           </SectionCard>
         </div>
         <div className="col-lg-6">
           <SectionCard title="Canales de notificación" icon="bi-bell" subtitle={`Canales activos: ${canalesActivos} de 4`}>
-            {[{k:'web',icon:'bi-globe',label:'Notificaciones web',desc:'Avisos dentro de la plataforma.'},{k:'email',icon:'bi-envelope',label:'Correo electrónico',desc:'Envío de alertas por email.'},{k:'whatsapp',icon:'bi-whatsapp',label:'WhatsApp',desc:'Mensajes a contactos configurados.'},{k:'mobile',icon:'bi-phone',label:'Notificaciones móviles',desc:'Push en dispositivos registrados.'}].map(c => (
-              <div className="d-flex align-items-center justify-content-between py-3 border-bottom" key={c.k}>
-                <div className="d-flex align-items-center gap-3">
-                  <div className="rounded-3 bg-light d-inline-flex align-items-center justify-content-center" style={{width:40,height:40}}><i className={`bi ${c.icon} fs-5`}></i></div>
-                  <div><div className="fw-medium">{c.label}</div><div className="text-secondary small">{c.desc}</div></div>
+            <div className="d-flex flex-column">
+              {[{k:'web',icon:'bi-globe',label:'Notificaciones web',desc:'Avisos y alertas dentro de la plataforma.'},{k:'email',icon:'bi-envelope',label:'Correo electrónico',desc:'Envío de alertas a casillas configuradas.'},{k:'whatsapp',icon:'bi-whatsapp',label:'WhatsApp',desc:'Mensajes a contactos y grupos operativos.'},{k:'mobile',icon:'bi-phone',label:'Notificaciones móviles',desc:'Push en dispositivos registrados.'}].map(c => (
+                <div className="d-flex align-items-center justify-content-between py-3 border-bottom gap-3" key={c.k}>
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="rounded-4 d-inline-flex align-items-center justify-content-center flex-shrink-0" style={{width:42,height:42, background:'var(--siai-surface-alt)', border:'1px solid var(--siai-divider)', color:'var(--siai-primary)'}}><i className={`bi ${c.icon} fs-5`}></i></div>
+                    <div><div className="fw-semibold">{c.label}</div><div className="text-secondary small">{c.desc}</div></div>
+                  </div>
+                  <div className="form-check form-switch m-0"><input className="form-check-input" type="checkbox" role="switch" id={`notif-${c.k}`} checked={canales[c.k]} onChange={(e) => cambiarCanal(c.k, e.target.checked)} /></div>
                 </div>
-                <div className="form-check form-switch m-0"><input className="form-check-input" type="checkbox" role="switch" id={`notif-${c.k}`} checked={canales[c.k]} onChange={(e) => cambiarCanal(c.k, e.target.checked)} /></div>
-              </div>
-            ))}
+              ))}
+            </div>
           </SectionCard>
         </div>
         <div className="col-12">
           <SectionCard title="Información del sistema" icon="bi-info-circle">
-            <div className="row g-3">
-              <div className="col-md-3"><div className="text-secondary small mb-1"><i className="bi bi-hdd me-1"></i>Sistema</div><div className="fw-semibold">SIAI Tucumán</div></div>
-              <div className="col-md-3"><div className="text-secondary small mb-1"><i className="bi bi-tag me-1"></i>Versión</div><div className="fw-semibold">1.0.0</div></div>
-              <div className="col-md-3"><div className="text-secondary small mb-1"><i className="bi bi-diagram-3 me-1"></i>Entorno</div><div className="fw-semibold">Producción</div></div>
-              <div className="col-md-3"><div className="text-secondary small mb-1"><i className="bi bi-activity me-1"></i>Estado</div><span className="badge text-bg-success"><i className="bi bi-circle-fill me-1"></i>Operativo</span></div>
+            <div className="row g-3 g-lg-4">
+              <div className="col-6 col-md-3"><div className="p-3 rounded-4 h-100" style={{background:'var(--siai-surface-alt)', border:'1px solid var(--siai-divider)'}}><div className="text-secondary small mb-1"><i className="bi bi-hdd me-1"></i>Plataforma</div><div className="fw-semibold">SIAI Tucumán</div></div></div>
+              <div className="col-6 col-md-3"><div className="p-3 rounded-4 h-100" style={{background:'var(--siai-surface-alt)', border:'1px solid var(--siai-divider)'}}><div className="text-secondary small mb-1"><i className="bi bi-tag me-1"></i>Versión</div><div className="fw-semibold">1.0.0</div></div></div>
+              <div className="col-6 col-md-3"><div className="p-3 rounded-4 h-100" style={{background:'var(--siai-surface-alt)', border:'1px solid var(--siai-divider)'}}><div className="text-secondary small mb-1"><i className="bi bi-diagram-3 me-1"></i>Entorno</div><div className="fw-semibold">Producción</div></div></div>
+              <div className="col-6 col-md-3"><div className="p-3 rounded-4 h-100" style={{background:'var(--siai-surface-alt)', border:'1px solid var(--siai-divider)'}}><div className="text-secondary small mb-1"><i className="bi bi-activity me-1"></i>Estado</div><span className="badge text-bg-success"><i className="bi bi-circle-fill me-1" style={{fontSize:'0.45rem', verticalAlign:'middle'}}></i>Operativo</span></div></div>
             </div>
           </SectionCard>
         </div>

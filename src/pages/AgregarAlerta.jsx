@@ -151,12 +151,12 @@ function AgregarAlerta() {
 
   return (
     <div>
-      <PageHeader icon="bi-exclamation-triangle" title="Nueva alerta" subtitle="Emití una alerta manual para notificar una situación relevante a los canales configurados." actions={<Link to="/alertas" className="btn btn-outline-secondary"><i className="bi bi-arrow-left me-1"></i>Volver al centro de alertas</Link>} />
+      <PageHeader icon="bi-exclamation-triangle" eyebrow="Operación" title="Nueva alerta" subtitle="Emití una alerta manual para notificar una situación relevante a los canales configurados." actions={<Link to="/alertas" className="btn btn-outline-secondary"><i className="bi bi-arrow-left me-1"></i>Volver al centro de alertas</Link>} />
       <div className="row g-4">
         <div className="col-lg-8">
           <div className="card">
-            <div className="card-header"><strong><i className="bi bi-pencil-square me-1"></i>Información de la alerta</strong></div>
-            <div className="card-body p-4">
+            <div className="card-header"><h2 className="h6 fw-bold mb-0 d-flex align-items-center gap-2"><i className="bi bi-pencil-square text-primary"></i>Información de la alerta</h2></div>
+            <div className="card-body p-4 p-lg-5">
 
                 <form id="formAlerta" onSubmit={handleSubmit} noValidate>
                   <div className="mb-3">

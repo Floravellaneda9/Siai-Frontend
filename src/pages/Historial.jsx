@@ -32,17 +32,18 @@ function Historial() {
 
   return (
     <div>
-      <PageHeader icon="bi-clock-history" title="Historial de eventos" subtitle="Registro cronológico de alertas, avisos y actividad del sistema." />
+      <PageHeader icon="bi-clock-history" eyebrow="Trazabilidad" title="Historial de eventos" subtitle="Registro cronológico de alertas, avisos operativos y actividad relevante del sistema." />
       <SectionCard
-        title="Eventos recientes"
-        icon="bi-list-ul"
+        title="Línea de eventos"
+        subtitle={`${filtrados.length} eventos mostrados`}
+        icon="bi-activity"
         actions={<div className="d-flex flex-wrap gap-1">{tipos.map(t => <button key={t} className={`btn btn-sm ${filtro===t?'btn-primary':'btn-outline-secondary'}`} onClick={() => setFiltro(t)}>{t === 'TODOS' ? 'Todos' : t}</button>)}</div>}
         noBodyPadding
       >
         <div className="list-group list-group-flush">
           {filtrados.map((evento) => (
             <div
-              className="list-group-item list-group-item-action py-3 px-4"
+              className="list-group-item list-group-item-action py-3 py-lg-4 px-4"
               key={evento.id}
               role="button"
               tabIndex={0}
@@ -50,19 +51,21 @@ function Historial() {
               onClick={() => verEvento(evento)}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); verEvento(evento) } }}
             >
-              <div className="d-flex gap-3">
-                <div className={`rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0 bg-${evento.badgeColor}-subtle text-${evento.badgeColor}`} style={{ width: 40, height: 40 }}>
-                  <i className={`bi ${evento.icono}`}></i>
+              <div className="d-flex gap-3 align-items-start">
+                <div className={`rounded-4 d-inline-flex align-items-center justify-content-center flex-shrink-0 bg-${evento.badgeColor}-subtle text-${evento.badgeColor}`} style={{ width: 44, height: 44 }}>
+                  <i className={`bi ${evento.icono} fs-5`}></i>
                 </div>
                 <div className="flex-grow-1 min-w-0">
-                  <div className="d-flex justify-content-between align-items-start gap-2">
-                    <div>
-                      <span className={`badge text-bg-${evento.badgeColor} me-2`}>{evento.tipo}</span>
-                      <span className="fw-semibold">{evento.titulo}</span>
-                      <p className="mb-1 mt-1 text-secondary small">{evento.descripcion}</p>
+                  <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+                    <div className="min-w-0">
+                      <div className="d-flex align-items-center gap-2 flex-wrap mb-1">
+                        <span className={`badge text-bg-${evento.badgeColor}`}>{evento.tipo}</span>
+                        <span className="fw-semibold" style={{ color: 'var(--siai-text-strong)' }}>{evento.titulo}</span>
+                      </div>
+                      <p className="mb-2 text-secondary">{evento.descripcion}</p>
                       <span className="text-secondary small"><i className="bi bi-geo-alt me-1"></i>{evento.origen}</span>
                     </div>
-                    <span className="text-secondary small text-nowrap"><i className="bi bi-clock me-1"></i>{evento.hora}</span>
+                    <span className="text-secondary small text-nowrap px-2 py-1 rounded-pill" style={{ background: 'var(--siai-surface-alt)', border: '1px solid var(--siai-divider)' }}><i className="bi bi-clock me-1"></i>{evento.hora}</span>
                   </div>
                 </div>
               </div>

@@ -44,13 +44,14 @@ const Registro = () => {
   }
 
   return (
-    <form className="w-100 bg-white border rounded-4 shadow-sm p-4 p-md-5" style={{ maxWidth: 460 }} aria-labelledby="registro-title" onSubmit={handleRegistro}>
-      <div className="text-center mb-4">
-        <img src="/img/logogota..png" alt="Logo SIAI Tucumán" className="img-fluid" width="64" height="64" loading="lazy" />
+    <form className="w-100 bg-white border rounded-4 shadow-sm p-4 p-sm-5" style={{ borderColor: 'var(--siai-border)', boxShadow: 'var(--siai-shadow-lg)' }} aria-labelledby="registro-title" onSubmit={handleRegistro}>
+      <div className="mb-4">
+        <div className="d-inline-flex align-items-center justify-content-center rounded-4 mb-3" style={{ width: 52, height: 52, background: 'var(--siai-primary-soft)', color: 'var(--siai-primary)' }}>
+          <i className="bi bi-person-plus-fill fs-4"></i>
+        </div>
+        <h1 id="registro-title" className="h3 fw-bold mb-1" style={{ color: 'var(--siai-text-strong)' }}>Crear cuenta</h1>
+        <p className="text-secondary mb-0">Registrate para acceder al sistema de monitoreo SIAI Tucumán.</p>
       </div>
-
-      <h1 id="registro-title" className="h3 fw-bold text-center mb-1">Crear cuenta</h1>
-      <p className="text-secondary text-center mb-4">Completá tus datos para registrarte en el sistema.</p>
 
       <div className="mb-3">
         <label className="form-label" htmlFor="nombre">Nombre completo</label>
@@ -79,13 +80,17 @@ const Registro = () => {
         </div>
       </div>
 
-      {error && <p className="alert alert-danger" role="alert">{error}</p>}
-      {mensaje && <p className="alert alert-success" role="status">{mensaje}</p>}
+      {error && <p className="alert alert-danger d-flex align-items-center gap-2" role="alert"><i className="bi bi-exclamation-triangle-fill"></i><span>{error}</span></p>}
+      {mensaje && <p className="alert alert-success d-flex align-items-center gap-2" role="status"><i className="bi bi-check-circle-fill"></i><span>{mensaje}</span></p>}
 
       <button type="submit" className="btn btn-primary w-100 py-2" disabled={cargando}>
         <i className="bi bi-person-plus me-1"></i>
-        {cargando ? "Creando cuenta..." : "Registrarme"}
+        {cargando ? "Creando cuenta..." : "Crear cuenta"}
       </button>
+
+      <p className="small text-secondary text-center mt-4 mb-0">
+        ¿Ya tenés cuenta? <Link to="/login" className="fw-semibold">Iniciá sesión</Link>
+      </p>
     </form>
   )
 }

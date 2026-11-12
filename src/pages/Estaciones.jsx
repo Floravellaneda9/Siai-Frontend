@@ -3,6 +3,8 @@ import Swal from 'sweetalert2'
 import { emergencia, toast } from '../components/alertas.jsx'
 import PageHeader from '../components/layout/PageHeader.jsx'
 import SectionCard from '../components/ui/SectionCard.jsx'
+import StatCard from '../components/ui/StatCard.jsx'
+import StatusBadge from '../components/ui/StatusBadge.jsx'
 import { escaparHtml as escapar } from '../utils/html.js'
 
 const ESTACIONES_INICIALES = [
@@ -88,18 +90,29 @@ function Estaciones() {
 
   return (
     <div>
-      <PageHeader icon="bi-broadcast" title="Estaciones" subtitle="Red de estaciones de monitoreo hidrológico y meteorológico de la provincia." actions={<button className="btn btn-primary" onClick={nuevaEstacion}><i className="bi bi-plus-lg me-1"></i>Nueva estación</button>} />
-      <div className="row g-3 mb-3">
-        <div className="col-6 col-lg-3"><div className="card"><div className="card-body py-3"><div className="text-secondary small">Total estaciones</div><div className="fs-4 fw-bold">{stats.total}</div></div></div></div>
-        <div className="col-6 col-lg-3"><div className="card"><div className="card-body py-3"><div className="text-secondary small">Activas</div><div className="fs-4 fw-bold text-success">{stats.activas}</div></div></div></div>
-        <div className="col-6 col-lg-3"><div className="card"><div className="card-body py-3"><div className="text-secondary small">En alerta</div><div className="fs-4 fw-bold text-warning">{stats.alerta}</div></div></div></div>
-        <div className="col-6 col-lg-3"><div className="card"><div className="card-body py-3"><div className="text-secondary small">Críticas</div><div className="fs-4 fw-bold text-danger">{stats.criticas}</div></div></div></div>
+      <PageHeader icon="bi-broadcast" eyebrow="Red de monitoreo" title="Estaciones" subtitle="Administración y seguimiento de estaciones hidrológicas y meteorológicas en la provincia." actions={<button className="btn btn-primary" onClick={nuevaEstacion}><i className="bi bi-plus-lg me-1"></i>Nueva estación</button>} />
+      <div className="row g-3 mb-4">
+        <div className="col-6 col-xl-3"><StatCard label="Total estaciones" value={stats.total} icon="bi-broadcast-pin" tone="primary" meta="Registradas en la red" /></div>
+        <div className="col-6 col-xl-3"><StatCard label="Activas" value={stats.activas} icon="bi-check-circle" tone="success" meta="Operación normal" /></div>
+        <div className="col-6 col-xl-3"><StatCard label="En alerta" value={stats.alerta} icon="bi-exclamation-triangle" tone="warning" meta="Requieren seguimiento" /></div>
+        <div className="col-6 col-xl-3"><StatCard label="Críticas" value={stats.criticas} icon="bi-exclamation-octagon" tone="danger" meta="Riesgo o emergencia" /></div>
       </div>
 
       <SectionCard
         title="Listado de estaciones"
+        subtitle={`${filtradas.length} de ${estaciones.length} estaciones visibles`}
         icon="bi-table"
-        actions={<div className="d-flex flex-wrap gap-2"><div className="input-group input-group-sm" style={{maxWidth:240}}><span className="input-group-text"><i className="bi bi-search"></i></span><input className="form-control" placeholder="Buscar..." value={busqueda} onChange={e=>setBusqueda(e.target.value)} /></div><select className="form-select form-select-sm" style={{maxWidth:170}} value={estadoFiltro} onChange={e=>setEstadoFiltro(e.target.value)}><option value="TODOS">Todos los estados</option><option value="Activa">Activa</option><option value="Precaución">Precaución</option><option value="Riesgo">Riesgo</option><option value="Emergencia">Emergencia</option></select></div>}
+        actions={
+          <div className="d-flex flex-wrap gap-2">
+            <div className="input-group input-group-sm" style={{ minWidth: 220 }}>
+              <span className="input-group-text"><i className="bi bi-search"></i></span>
+              <input className="form-control" placeholder="Buscar por código o nombre..." value={busqueda} onChange={e=>setBusqueda(e.target.value)} />
+            </div>
+            <select className="form-select form-select-sm" style={{ minWidth: 170 }} value={estadoFiltro} onChange={e=>setEstadoFiltro(e.target.value)}>
+              <option value="TODOS">Todos los estados</option><option value="Activa">Activa</option><option value="Precaución">Precaución</option><option value="Riesgo">Riesgo</option><option value="Emergencia">Emergencia</option>
+            </select>
+          </div>
+        }
         noBodyPadding
       >
         <div className="table-responsive">
@@ -108,17 +121,17 @@ function Estaciones() {
             <tbody>
               {filtradas.map((estacion) => (
                 <tr key={estacion.id}>
-                  <td className="fw-semibold">{estacion.id}</td>
-                  <td><div className="fw-medium">{estacion.nombre}</div></td>
+                  <td><span className="fw-semibold text-primary">{estacion.id}</span></td>
+                  <td><div className="fw-semibold">{estacion.nombre}</div></td>
                   <td className="text-secondary small">{estacion.tipo}</td>
-                  <td><i className="bi bi-water text-primary me-1"></i><strong>{estacion.nivel}</strong></td>
-                  <td><i className="bi bi-cloud-rain text-info me-1"></i>{estacion.precipitacion}</td>
-                  <td><span className={`badge text-bg-${estacion.badgeColor}`}>{estacion.estado}</span></td>
+                  <td><span className="d-inline-flex align-items-center gap-1"><i className="bi bi-water text-primary"></i><strong>{estacion.nivel}</strong></span></td>
+                  <td><span className="d-inline-flex align-items-center gap-1"><i className="bi bi-cloud-rain text-info"></i>{estacion.precipitacion}</span></td>
+                  <td><StatusBadge status={estacion.estado} tone={estacion.badgeColor} /></td>
                   <td className="text-secondary small">{estacion.actualizacion}</td>
                   <td className="text-end"><button className={`btn btn-sm ${estacion.btnClass}`} onClick={() => verDetalles(estacion)}><i className="bi bi-eye me-1"></i>Detalle</button></td>
                 </tr>
               ))}
-              {filtradas.length === 0 && <tr><td colSpan="8" className="text-center text-secondary py-4">No se encontraron estaciones.</td></tr>}
+              {filtradas.length === 0 && <tr><td colSpan="8" className="text-center text-secondary py-5">No se encontraron estaciones con los filtros aplicados.</td></tr>}
             </tbody>
           </table>
         </div>

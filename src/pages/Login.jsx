@@ -46,17 +46,20 @@ function Login() {
   }
 
   return (
-    <form className="w-100 bg-white border rounded-4 shadow-sm p-4 p-md-5" style={{ maxWidth: 460 }} aria-labelledby="login-title" onSubmit={handleLogin}>
-      <div className="text-center mb-4">
-        <img src="/img/logogota..png" alt="Logo SIAI Tucumán" className="img-fluid" width="64" height="64" />
+    <form className="w-100 bg-white border rounded-4 p-3 p-sm-4 p-md-5" style={{ borderColor: 'var(--siai-border)', boxShadow: 'var(--siai-shadow-lg)' }} aria-labelledby="login-title" onSubmit={handleLogin}>
+      <div className="mb-3 mb-sm-4 pb-3 border-bottom" style={{ borderColor: 'var(--siai-divider)' }}>
+        <div className="d-flex align-items-center justify-content-between mb-2 mb-sm-3 gap-2">
+          <div className="d-inline-flex align-items-center justify-content-center rounded-4 flex-shrink-0" style={{ width: 50, height: 50, background: 'linear-gradient(135deg, var(--siai-primary-soft), #ecfeff)', color: 'var(--siai-primary)', border: '1px solid rgba(37,99,235,0.12)' }}>
+            <i className="bi bi-droplet-fill fs-4"></i>
+          </div>
+          <span className="badge rounded-pill text-bg-light border text-secondary fw-semibold px-2 px-sm-3 py-2 text-wrap text-end">
+            <i className="bi bi-shield-check me-1 text-primary"></i>Acceso seguro
+          </span>
+        </div>
+        <div className="eyebrow mb-1 mb-sm-2">SIAI Tucumán</div>
+        <h1 id="login-title" className="h4 h3-sm fw-bold mb-2" style={{ color: 'var(--siai-text-strong)', letterSpacing: '-0.02em' }}>Bienvenido de nuevo</h1>
+        <p className="text-secondary mb-0 small">Ingresá tus credenciales para acceder al panel de monitoreo, alertas y gestión operativa.</p>
       </div>
-
-      <h1 id="login-title" className="h3 fw-bold text-center mb-1">
-        Iniciar sesión
-      </h1>
-      <p className="text-secondary text-center mb-4">
-        Accedé al sistema de monitoreo y alertas de SIAI Tucumán.
-      </p>
 
       <div className="mb-3">
         <label className="form-label" htmlFor="email">Correo electrónico</label>
@@ -67,7 +70,7 @@ function Login() {
         </div>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-2">
         <label className="form-label" htmlFor="password">Contraseña</label>
         <div className="input-group">
           <span className="input-group-text"><i className="bi bi-lock"></i></span>
@@ -76,20 +79,31 @@ function Login() {
         </div>
       </div>
 
-      <button type="submit" id="btn-login" className="btn btn-primary w-100 py-2" disabled={cargando}>
-        <i className="bi bi-box-arrow-in-right me-1"></i>
-        {cargando ? 'Ingresando...' : 'Ingresar'}
+      <p className="small text-secondary mb-4">Usá la cuenta habilitada por la plataforma para continuar.</p>
+
+      <button type="submit" id="btn-login" className="btn btn-primary w-100 py-2 mb-3" disabled={cargando}>
+        <i className={`bi ${cargando ? 'bi-arrow-repeat' : 'bi-box-arrow-in-right'} me-1`}></i>
+        {cargando ? 'Verificando credenciales...' : 'Ingresar al sistema'}
       </button>
 
-      <Link to="/registro" className="btn btn-outline-secondary w-100 py-2 mt-2">
+      <div className="d-flex align-items-center gap-3 my-3">
+        <hr className="flex-grow-1 m-0" /><span className="small text-secondary text-uppercase" style={{ letterSpacing: '0.06em', fontSize: '0.7rem' }}>o</span><hr className="flex-grow-1 m-0" />
+      </div>
+
+      <Link to="/registro" className="btn btn-outline-secondary w-100 py-2">
         <i className="bi bi-person-plus me-1"></i>
-        Crear cuenta
+        Crear una cuenta nueva
       </Link>
 
-      <p className="small text-secondary text-center mt-3 mb-0">
-        <i className="bi bi-shield-lock me-1"></i>
-        Acceso restringido a personal autorizado.
-      </p>
+      <div className="mt-4 pt-3 border-top d-flex flex-column gap-2" style={{ borderColor: 'var(--siai-divider)' }}>
+        <p className="small text-secondary mb-0 d-flex align-items-start gap-2">
+          <i className="bi bi-shield-lock text-primary mt-1"></i>
+          <span>Acceso restringido a personal autorizado. La actividad puede ser registrada con fines operativos.</span>
+        </p>
+        <Link to="/" className="small fw-semibold text-decoration-none align-self-start">
+          <i className="bi bi-arrow-left me-1"></i>Volver al inicio
+        </Link>
+      </div>
     </form>
   )
 }

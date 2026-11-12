@@ -103,10 +103,10 @@ function Home() {
 
   const tarjetaZona = (zona, index) => (
     <div className="col-md-4" key={index}>
-      <div className="card shadow-sm h-100" role="button" tabIndex={0} style={{ cursor: 'pointer' }} onClick={() => verZona(zona)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); verZona(zona) } }}>
-        <img src={zona.imagen} className="card-img-top rounded-top" alt={zona.nombre} loading="lazy" decoding="async" />
+      <div className="card home-zone-card h-100" role="button" tabIndex={0} style={{ cursor: 'pointer' }} onClick={() => verZona(zona)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); verZona(zona) } }}>
+        <img src={zona.imagen} className="card-img-top" alt={zona.nombre} loading="lazy" decoding="async" />
         <div className="card-body">
-          <h5 className="card-title">{zona.nombre}</h5>
+          <h5 className="card-title h6 fw-bold mb-1">{zona.nombre}</h5>
           <p className="card-text text-secondary small mb-0">{zona.descripcion}</p>
         </div>
       </div>
@@ -114,37 +114,40 @@ function Home() {
   )
 
   return (
-    <div className="admi-page">
-      <section className="admi-hero mb-4">
-        <div className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+    <div className="home-page">
+      <section className="home-hero mb-4 mb-lg-5">
+        <div className="d-flex flex-column flex-xl-row align-items-xl-center justify-content-between gap-4">
           <div>
-            <div className="eyebrow">SIAI Tucumán · Monitoreo hídrico</div>
-            <h1><i className="bi bi-water me-2"></i>Dashboard principal</h1>
-            <p>Estado operativo de estaciones, niveles hidrométricos y zonas de riesgo en tiempo casi real.</p>
+            <div className="eyebrow">SIAI Tucumán · Centro de monitoreo</div>
+            <h1><i className="bi bi-water me-2"></i>Dashboard operativo</h1>
+            <p>Visión consolidada del estado hidrométrico, estaciones críticas y zonas de riesgo en la provincia, en tiempo casi real.</p>
           </div>
-          <div className="d-flex flex-column align-items-lg-end gap-2">
-            <div className="admi-status-pill"><span className="admi-status-dot" aria-hidden="true"></span>Sistema operativo</div>
-            <div className="small text-white-50"><i className="bi bi-clock me-1"></i>Última actualización: <strong className="text-white">{NIVEL_CRITICO.actualizacion}</strong></div>
+          <div className="d-flex flex-column align-items-xl-end gap-2">
+            <div className="home-status-pill"><span className="home-status-dot" aria-hidden="true"></span>Sistema operativo</div>
+            <div className="small" style={{ color: 'rgba(226,232,240,0.8)' }}><i className="bi bi-clock-history me-1"></i>Última actualización <strong className="text-white">{NIVEL_CRITICO.actualizacion}</strong></div>
           </div>
         </div>
       </section>
 
       <section className="row g-3 mb-4" aria-label="Resumen general">
-        <div className="col-6 col-xl-3"><div className="admi-panel h-100"><div className="panel-body"><div className="admi-section-title mb-1">Estaciones monitoreadas</div><div className="fs-3 fw-bold">{TOTAL_ZONAS}</div><div className="text-secondary small">Cobertura provincial activa</div></div></div></div>
-        <div className="col-6 col-xl-3"><div className="admi-panel h-100"><div className="panel-body"><div className="admi-section-title mb-1">Zonas en alerta</div><div className="fs-3 fw-bold text-danger">{ZONAS_EN_ALERTA}</div><div className="text-secondary small">Precaución, riesgo y emergencia</div></div></div></div>
-        <div className="col-6 col-xl-3"><div className="admi-panel h-100"><div className="panel-body"><div className="admi-section-title mb-1">Nivel crítico actual</div><div className="fs-3 fw-bold text-danger">{NIVEL_CRITICO.nivel.toFixed(2)} m</div><div className="text-secondary small">{NIVEL_CRITICO.rio} ({NIVEL_CRITICO.estacion})</div></div></div></div>
-        <div className="col-6 col-xl-3"><div className="admi-panel h-100"><div className="panel-body"><div className="admi-section-title mb-1">Estado de red</div><div className="fs-3 fw-bold text-success">En línea</div><div className="text-secondary small">Telemetría y reportes disponibles</div></div></div></div>
+        <div className="col-6 col-xl-3"><div className="home-summary-card"><div className="d-flex align-items-center justify-content-between mb-2"><div className="home-summary-label">Estaciones monitoreadas</div><i className="bi bi-broadcast text-primary"></i></div><div className="home-summary-value">{TOTAL_ZONAS}</div><div className="home-summary-meta">Cobertura provincial activa</div></div></div>
+        <div className="col-6 col-xl-3"><div className="home-summary-card"><div className="d-flex align-items-center justify-content-between mb-2"><div className="home-summary-label">Zonas en alerta</div><i className="bi bi-exclamation-triangle text-danger"></i></div><div className="home-summary-value text-danger">{ZONAS_EN_ALERTA}</div><div className="home-summary-meta">Precaución, riesgo y emergencia</div></div></div>
+        <div className="col-6 col-xl-3"><div className="home-summary-card"><div className="d-flex align-items-center justify-content-between mb-2"><div className="home-summary-label">Nivel crítico actual</div><i className="bi bi-droplet-fill text-danger"></i></div><div className="home-summary-value text-danger">{NIVEL_CRITICO.nivel.toFixed(2)} m</div><div className="home-summary-meta">{NIVEL_CRITICO.rio} · {NIVEL_CRITICO.estacion}</div></div></div>
+        <div className="col-6 col-xl-3"><div className="home-summary-card"><div className="d-flex align-items-center justify-content-between mb-2"><div className="home-summary-label">Estado de red</div><i className="bi bi-activity text-success"></i></div><div className="home-summary-value text-success">En línea</div><div className="home-summary-meta">Telemetría y reportes disponibles</div></div></div>
       </section>
 
-      <section className="mb-4" aria-label="Estado por zonas">
-        <div className="d-flex align-items-center justify-content-between mb-2">
-          <h2 className="h5 fw-bold mb-0">Estado por condición hidrológica</h2>
-          <span className="text-secondary small">Hacé clic para ver el detalle</span>
+      <section className="mb-4 mb-lg-5" aria-label="Estado por zonas">
+        <div className="d-flex align-items-center justify-content-between mb-3">
+          <div>
+            <h2 className="h5 fw-bold mb-0">Condición hidrológica</h2>
+            <div className="text-secondary small">Distribución de zonas por nivel de severidad</div>
+          </div>
+          <span className="text-secondary small d-none d-md-inline">Seleccioná una tarjeta para ver detalle</span>
         </div>
         <div className="row g-3">
           {ZONAS.map((zona) => (
             <div className="col-md-6 col-xl-3" key={zona.estado}>
-              <div className="admi-kpi" role="button" tabIndex={0} style={{ cursor: 'pointer' }} onClick={() => verZona(zona)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); verZona(zona) } }}>
+              <div className="home-kpi" role="button" tabIndex={0} onClick={() => verZona(zona)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); verZona(zona) } }}>
                 <div className="p-3 p-lg-4">
                   <div className="kpi-head">
                     <div><div className="kpi-label">{zona.titulo}</div><p className="kpi-value">{zona.cantidad}</p></div>
@@ -159,66 +162,69 @@ function Home() {
         </div>
       </section>
 
-      <section className="row g-3 mb-4">
+      <section className="row g-3 g-lg-4 mb-4 mb-lg-5">
         <div className="col-lg-7">
-          <div className="admi-panel h-100" role="button" tabIndex={0} style={{ cursor: 'pointer' }} onClick={verNivelCritico} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); verNivelCritico() } }}>
-            <div className="panel-header"><h2 className="panel-title"><i className="bi bi-droplet-fill text-primary me-2"></i>Estación crítica</h2><span className="badge text-bg-danger">Emergencia</span></div>
+          <div className="home-panel h-100" role="button" tabIndex={0} onClick={verNivelCritico} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); verNivelCritico() } }} style={{ cursor: 'pointer' }}>
+            <div className="panel-header"><h2 className="panel-title"><i className="bi bi-droplet-fill text-primary me-2"></i>Estación en estado crítico</h2><span className="badge text-bg-danger">Emergencia</span></div>
             <div className="panel-body">
-              <div className="row align-items-end g-3">
+              <div className="row align-items-end g-4">
                 <div className="col-sm-5">
                   <div className="text-secondary small text-uppercase fw-semibold">Nivel medido</div>
                   <div className="critical-metric">{NIVEL_CRITICO.nivel.toFixed(2)} m</div>
-                  <div className="text-secondary"><i className="bi bi-geo-alt me-1"></i>{NIVEL_CRITICO.estacion} · {NIVEL_CRITICO.rio}</div>
+                  <div className="fw-medium"><i className="bi bi-geo-alt me-1 text-secondary"></i>{NIVEL_CRITICO.estacion} · {NIVEL_CRITICO.rio}</div>
                   <div className="text-secondary small">{NIVEL_CRITICO.localidad}, Tucumán</div>
                 </div>
                 <div className="col-sm-7">
                   <div className="d-flex justify-content-between small mb-1"><span className="text-secondary">Escala de referencia</span><span className="fw-semibold text-danger">{PORCENTAJE_NIVEL}% de {NIVEL_CRITICO.maximoEscala.toFixed(1)} m</span></div>
                   <div className="level-track" aria-hidden="true"><div className="level-fill" style={{ width: `${PORCENTAJE_NIVEL}%` }}></div></div>
                   <div className="level-scale"><span>0.0 m</span><span>Alerta {NIVEL_CRITICO.umbralAlerta.toFixed(1)} m</span><span>Emerg. {NIVEL_CRITICO.umbralEmergencia.toFixed(1)} m</span></div>
-                  <div className="alert alert-danger d-flex align-items-start gap-2 py-2 px-3 mt-3 mb-0" role="status"><i className="bi bi-exclamation-octagon-fill mt-1"></i><div className="small">Se superó el umbral de emergencia. Requiere notificación a Defensa Civil y seguimiento continuo.</div></div>
+                  <div className="alert alert-danger d-flex align-items-start gap-2 py-2 px-3 mt-3 mb-0" role="status"><i className="bi bi-exclamation-octagon-fill mt-1"></i><div className="small">Umbral de emergencia superado. Se requiere notificación a Defensa Civil y seguimiento continuo.</div></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className="col-lg-5">
-          <div className="admi-panel h-100">
-            <div className="panel-header"><h2 className="panel-title"><i className="bi bi-broadcast text-primary me-2"></i>Estaciones destacadas</h2><span className="text-secondary small">Seguimiento prioritario</span></div>
+          <div className="home-panel h-100">
+            <div className="panel-header"><h2 className="panel-title"><i className="bi bi-broadcast-pin text-primary me-2"></i>Estaciones prioritarias</h2><span className="text-secondary small">Seguimiento activo</span></div>
             <div className="panel-body">
-              <ul className="admi-list">
+              <ul className="home-list">
                 {ESTACIONES_DESTACADAS.map((est) => (
                   <li key={est.nombre}><div><p className="item-title">{est.nombre}</p><p className="item-sub">Último nivel registrado: <strong>{est.nivel}</strong></p></div><span className={`badge text-bg-${est.color}`}>{est.estado}</span></li>
                 ))}
               </ul>
-              <div className="mt-3 pt-3 border-top"><div className="small text-secondary mb-2"><i className="bi bi-info-circle me-1"></i>Recomendación operativa</div><p className="mb-0 small">Priorizar la verificación de sensores en estaciones con tendencia ascendente y mantener comunicación con defensa civil ante cambios de estado.</p></div>
+              <div className="mt-3 pt-3 border-top" style={{ borderColor: 'var(--siai-divider)' }}>
+                <div className="small text-secondary mb-1 fw-semibold"><i className="bi bi-info-circle me-1"></i>Recomendación operativa</div>
+                <p className="mb-0 small text-secondary">Priorizar verificación de sensores con tendencia ascendente y mantener coordinación con Defensa Civil ante cambios de estado.</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <SectionCard title="Zonas en riesgo" icon="bi-exclamation-triangle-fill" subtitle="Localidades y puntos con vulnerabilidad hídrica en la provincia.">
-        <div className="accordion" id="localidadesAccordion">
-          {GRUPOS_ZONAS.map((g) => (
-            <div className="accordion-item" key={g.id}>
-              <h2 className="accordion-header">
-                <button className={`accordion-button ${openAccordion === g.id ? '' : 'collapsed'}`} type="button" onClick={() => toggleAccordion(g.id)}>{g.label}</button>
-              </h2>
-              <div className={`accordion-collapse collapse ${openAccordion === g.id ? 'show' : ''}`}>
-                <div className="accordion-body"><div className="row g-3">{g.items.map(tarjetaZona)}</div></div>
+      <div className="d-flex flex-column gap-4">
+        <SectionCard title="Zonas en riesgo" icon="bi-geo-alt" subtitle="Localidades y puntos con vulnerabilidad hídrica en la provincia.">
+          <div className="accordion home-accordion" id="localidadesAccordion">
+            {GRUPOS_ZONAS.map((g) => (
+              <div className="accordion-item" key={g.id}>
+                <h2 className="accordion-header">
+                  <button className={`accordion-button ${openAccordion === g.id ? '' : 'collapsed'}`} type="button" onClick={() => toggleAccordion(g.id)}>{g.label}</button>
+                </h2>
+                <div className={`accordion-collapse collapse ${openAccordion === g.id ? 'show' : ''}`}>
+                  <div className="accordion-body"><div className="row g-3">{g.items.map(tarjetaZona)}</div></div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </SectionCard>
+            ))}
+          </div>
+        </SectionCard>
 
-      <div className="mt-4">
         <SectionCard title="Medidas preventivas" icon="bi-shield-check" subtitle="Recomendaciones para reducir riesgos ante crecidas e inundaciones.">
           <div className="row g-3">
             {MEDIDAS_PREVENTIVAS.map((m, i) => (
               <div className="col-md-6 col-lg-4" key={i}>
-                <div className={`card h-100 border-${m.border}`}>
+                <div className={`card h-100 home-measure-card border-${m.border} border-opacity-50`}>
                   <img src={m.imagen} className="card-img-top" alt={m.titulo} loading="lazy" decoding="async" />
-                  <div className="card-body"><h5 className="card-title">{m.titulo}</h5><p className="card-text text-secondary small mb-0">{m.descripcion}</p></div>
+                  <div className="card-body"><h5 className="card-title h6 fw-bold">{m.titulo}</h5><p className="card-text text-secondary small mb-0">{m.descripcion}</p></div>
                 </div>
               </div>
             ))}
